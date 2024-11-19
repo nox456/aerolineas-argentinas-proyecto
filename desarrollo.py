@@ -12,7 +12,7 @@ def menuPrincipal():  # int
     print("4. Almacen")
     print("-----------------------")
     print("5. SALIR DEL PROGRAMA\n")
-    return validar["opcion"]()
+    return validar["opcion"](input("Ingrese una opción del menú (1-5): "))
 
 
 def menuRecursosHumanos():  # void
@@ -24,12 +24,17 @@ def menuRecursosHumanos():  # void
     print("4. Crear nómina de empleado")
     print("---------------------------------")
     print("5. SALIR DEL PROGRAMA\n")
-    opcion = validar["opcion"]()
+    opcion = validar["opcion"](input("Ingrese una opción del menú (1-5): "))
     if opcion == 1:
-        archivo = validar["abrirArchivo"]("recursos_humanos/personal.bin")
+        archivo = validar["leerArchivo"]("recursos_humanos/personal.bin")
         recursos_humanos["listar"](archivo)
+        archivo.close()
     elif opcion == 2:
-        print("agregar")
+        archivoEmpleados = validar["agregarArchivo"]("recursos_humanos/personal.bin")
+        archivoRoles = validar["leerArchivo"]("recursos_humanos/roles.bin")
+        recursos_humanos["agregar"](archivoEmpleados, archivoRoles)
+        archivoEmpleados.close()
+        archivoRoles.close()
     elif opcion == 3:
         print("eliminar")
     elif opcion == 4:
