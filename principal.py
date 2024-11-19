@@ -1,10 +1,23 @@
 from desarrollo import solucion
 
+
 def main():
+    opcion = 0  # int
 
-    solucion["mostrarMenu"]()
-    solucion["seleccionMenu"]()
+    opcion = solucion["menuPrincipal"]()
 
+    if opcion == 1:
+        solucion["menuRecursosHumanos"]()
+    elif opcion == 2:
+        print("V")
+    elif opcion == 3:
+        print("I")
+    elif opcion == 4:
+        print("A")
+    elif opcion == 5:
+        print("GRACIAS POR USAR EL SOFTWARE!")
+    else:
+        print("ERROR: Opción no válida!")
 
 
 main()

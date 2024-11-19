@@ -1,7 +1,7 @@
-from validaciones import diccValidaciones
+from validaciones import validar
 
 
-def mostrarMenu():  # void
+def menuPrincipal():  # int
     print("*****************************")
     print("*** AEROLÍNEAS ARGENTINAS ***")
     print("*****************************\n")
@@ -11,21 +11,34 @@ def mostrarMenu():  # void
     print("4. Almacen")
     print("-----------------------")
     print("5. SALIR DEL PROGRAMA\n")
+    return validar["opcion"]()
 
 
-def seleccionMenu():
+def menuRecursosHumanos():  # void
     opcion = 0  # int
-    opcion = diccValidaciones["validarOpcion"](input("Ingrese una opción (1-5): "))
+    print("\n**** RECURSOS HUMANOS ****\n")
+    print("1. Listar empleados")
+    print("2. Agregar empleado al registro")
+    print("3. Elimnar empleado al registro")
+    print("4. Crear nómina de empleado")
+    print("---------------------------------")
+    print("5. SALIR DEL PROGRAMA\n")
+    opcion = validar["opcion"]()
     if opcion == 1:
-        print("RH")
+        print("listado")
     elif opcion == 2:
-        print("V")
+        print("agregar")
     elif opcion == 3:
-        print("I")
+        print("eliminar")
     elif opcion == 4:
-        print("A")
+        print("nomina")
     elif opcion == 5:
         print("GRACIAS POR USAR EL SOFTWARE!")
+    else:
+        print("ERROR: Opción no válida!")
 
 
-solucion = {"mostrarMenu": mostrarMenu, "seleccionMenu": seleccionMenu}
+solucion = {
+    "menuPrincipal": menuPrincipal,
+    "menuRecursosHumanos": menuRecursosHumanos,
+}
