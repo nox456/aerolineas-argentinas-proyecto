@@ -1,4 +1,5 @@
 from validaciones import validar
+from recursos_humanos.desarrollo import recursos_humanos
 
 
 def menuPrincipal():  # int
@@ -25,7 +26,8 @@ def menuRecursosHumanos():  # void
     print("5. SALIR DEL PROGRAMA\n")
     opcion = validar["opcion"]()
     if opcion == 1:
-        print("listado")
+        archivo = validar["abrirArchivo"]("recursos_humanos/personal.bin")
+        recursos_humanos["listar"](archivo)
     elif opcion == 2:
         print("agregar")
     elif opcion == 3:

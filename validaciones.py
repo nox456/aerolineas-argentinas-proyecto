@@ -11,4 +11,13 @@ def validarOpcion():  # int
             print("ERROR: Valor incorrecto!")
 
 
-validar = {"opcion": validarOpcion}
+def openFile(ruta):  # object archivo
+    try:
+        archivo = open(ruta, "rb")
+        return archivo
+    except FileNotFoundError:
+        print("Objet-File: Archivo no encontrado. ")
+        return None
+
+
+validar = {"opcion": validarOpcion, "abrirArchivo": openFile}
