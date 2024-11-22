@@ -1,8 +1,16 @@
-from validaciones import validar
+from .utilitarias_rh import validar
 
 
+def diccionario():
+    return {
+        "listar": listar,
+        "agregar": agregar,
+    }
+        
 def listar(archivo):  # void
-    if archivo != None:
+    
+    if(archivo != None):
+
         print(
             "---------------------------------------------------------------------------------------------------"
         )
@@ -48,6 +56,8 @@ def agregar(archivoEmpleados, archivoRoles):  # void
     n = 0  # int
     indice_rol = 0  # int
 
+    
+    
     if archivoEmpleados != None and archivoRoles != None:
         nombre = input("Ingrese el nombre del empleado: ")
         apellido = input("Ingrese el apellido del empleado: ")
@@ -79,4 +89,5 @@ def agregar(archivoEmpleados, archivoRoles):  # void
             print("EMPLEADO REGISTRADO!")
 
 
-recursos_humanos = {"listar": listar, "agregar": agregar}
+    
+recursos_humanos = diccionario()

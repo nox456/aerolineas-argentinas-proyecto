@@ -1,6 +1,11 @@
 # Utilitarias
 
-
+def diccionario():
+    return {
+        "opcion": validarOpcion
+            }
+    
+    
 def validarOpcion(n):  # int
     valor = 0  # int
     while True:
@@ -9,44 +14,7 @@ def validarOpcion(n):  # int
             return valor
         except ValueError:
             print("ERROR: Valor incorrecto!")
+            n = input("Ingrese un valor entero: ")
 
 
-def leerArchivo(ruta):  # object archivo
-    try:
-        archivo = open(ruta, "rb")
-        return archivo
-    except FileNotFoundError:
-        print("Objet-File: Archivo no encontrado. ")
-        return None
-
-
-def agregarArchivo(ruta):  # object archivo
-    try:
-        archivo = open(ruta, "a")
-        return archivo
-    except FileNotFoundError:
-        print("Objet-File: Archivo no encontrado. ")
-        return None
-
-
-def validarInt(n):
-    valor = 0  # int
-    while True:
-        try:
-            valor = int(n)
-            if valor > 0:
-                return valor
-            else:
-                print("ERROR: No se admiten valores negativos!")
-                n = input("Ingrese el valor correcto: ")
-        except ValueError:
-            print("ERROR: Valor incorrecto!")
-            n = input("Ingrese el valor correcto: ")
-
-
-validar = {
-    "opcion": validarOpcion,
-    "leerArchivo": leerArchivo,
-    "agregarArchivo": agregarArchivo,
-    "entero": validarInt,
-}
+validar = diccionario()
