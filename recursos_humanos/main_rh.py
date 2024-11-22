@@ -15,12 +15,12 @@ def menuRecursosHumanos():  # void
     opcion = validar["opcion"](input("Ingrese una opción del menú (1-5): "))
     
     if opcion == 1:
-        archivo = validar["leerArchivo"]("recursos_humanos\\personal.bin")
+        archivo = validar["leerArchivo"]("recursos_humanos/personal.bin")
         recursos_humanos["listar"](archivo)
         archivo.close()
     elif opcion == 2:
-        archivoEmpleados = validar["agregarArchivo"]("recursos_humanos\\personal.bin")
-        archivoRoles = validar["leerArchivo"]("recursos_humanos\\roles.bin")
+        archivoEmpleados = validar["agregarArchivo"]("recursos_humanos/personal.bin")
+        archivoRoles = validar["leerArchivo"]("recursos_humanos/roles.bin")
         recursos_humanos["agregar"](archivoEmpleados, archivoRoles)
         archivoEmpleados.close()
         archivoRoles.close()

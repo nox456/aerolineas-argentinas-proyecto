@@ -11,7 +11,7 @@ def main():
     elif opcion == 2:
         print("V")
     elif opcion == 3:
-        print("I")
+        solucion["menuInventario"]()
     elif opcion == 4:
         print("A")
     elif opcion == 5:
