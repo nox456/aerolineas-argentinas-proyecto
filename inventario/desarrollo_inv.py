@@ -10,7 +10,7 @@ def listar(archivo):
         print("------------------------------------")
         print("{0:12}{1:3}  {2:6}".format("Nombre", "Cantidad", "Precio Total"))
         for fila in archivo:
-            campos = fila.decode("utf-8").split("#")
+            campos = fila.split("#")
             print(
                 "{0:15}{1:3}     {2:.2f} $".format(
                     campos[0], int(campos[1]), float(campos[2])

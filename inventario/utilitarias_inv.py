@@ -25,7 +25,7 @@ def validarOpcion(n):  # int
 def leerArchivo(ruta):
     archivo = object
     try:
-        archivo = open(ruta, "rb")
+        archivo = open(ruta)
         return archivo
     except FileNotFoundError:
         print("Objet-File: Archivo no encontrado. ")

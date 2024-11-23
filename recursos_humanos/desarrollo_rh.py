@@ -27,7 +27,7 @@ def listar(archivo):  # void
             )
         )
         for fila in archivo:
-            campos = fila.decode("utf-8").split("#")
+            campos = fila.split("#")
             print(
                 "{0:10}  {1:10}  {2:7}  {3:<4}  {4:<20}  {5:25}  {6:,} $".format(
                     campos[0],
@@ -67,8 +67,8 @@ def agregar(archivoEmpleados, archivoRoles):  # void
         )
         print("---- Lista de Roles/Cargos disponibles ----")
         for rol in archivoRoles:
-            nombre_rol = rol.decode("utf-8").split("#")[0]
-            salario_rol = float(rol.decode("utf-8").split("#")[1])
+            nombre_rol = rol.split("#")[0]
+            salario_rol = float(rol.split("#")[1])
             n += 1
             print("{0:2}. {1} - {2:,} $".format(n, nombre_rol, salario_rol))
         indice_rol = validar["opcion"](
@@ -82,8 +82,8 @@ def agregar(archivoEmpleados, archivoRoles):  # void
             for rol in archivoRoles:
                 n += 1
                 if n == indice_rol:
-                    cargo = rol.decode("utf-8").split("#")[0]
-                    salario = float(rol.decode("utf-8").split("#")[1])
+                    cargo = rol.split("#")[0]
+                    salario = float(rol.split("#")[1])
             archivoEmpleados.write(
                 "{0}#{1}#{2}#{3}#{4}#{5}#{6}".format(
                     nombre, apellido, cedula, edad, fecha, cargo, salario

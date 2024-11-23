@@ -26,7 +26,7 @@ def leerArchivo(ruta):  # object archivo
     archivo = object
     
     try:
-        archivo = open(ruta, "rb")
+        archivo = open(ruta)
         return archivo
     except FileNotFoundError:
         print("Objet-File: Archivo no encontrado. ")

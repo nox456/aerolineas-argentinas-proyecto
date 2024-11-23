@@ -12,11 +12,11 @@ def menuInventario():  # void
     opcion = validar["validarOpcion"](input("Ingrese una opción del menú (1-4): "))
 
     if opcion == 1:
-        archivo = validar["leerArchivo"]("inventario/articulos.bin")
+        archivo = validar["leerArchivo"]("inventario/articulos.txt")
         solucion["listar"](archivo)
         archivo.close()
     elif opcion == 2:
-        archivo = validar["agregarArchivo"]("inventario/articulos.bin")
+        archivo = validar["agregarArchivo"]("inventario/articulos.txt")
         solucion["agregar"](archivo)
         archivo.close()
     elif opcion == 3:
