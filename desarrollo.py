@@ -1,6 +1,7 @@
 from recursos_humanos.main_rh import menuRecursosHumanos
-from validaciones import validar
 from inventario.main_inv import menuInventario
+from pagos_ventas.main_pv import menuPagosVentas
+from validaciones import validar
 
 
 def diccionario():
@@ -8,6 +9,7 @@ def diccionario():
         "menuPrincipal": menuPrincipal,
         "menuRecursosHumanos": menuRecursosHumanos,
         "menuInventario": menuInventario,
+        "menuPagosVentas": menuPagosVentas
     }
 
 
@@ -16,7 +18,7 @@ def menuPrincipal():  # int
     print("*** AEROLÍNEAS ARGENTINAS ***")
     print("*****************************\n")
     print("1. Recursos Humanos")
-    print("2. Ventas")
+    print("2. Pagos y Ventas")
     print("3. Inventario")
     print("4. Almacen")
     print("-----------------------")

@@ -9,7 +9,7 @@ def main():
     if opcion == 1:
         solucion["menuRecursosHumanos"]()
     elif opcion == 2:
-        print("V")
+        solucion["menuPagosVentas"]()
     elif opcion == 3:
         solucion["menuInventario"]()
     elif opcion == 4:
