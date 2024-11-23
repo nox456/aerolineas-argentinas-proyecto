@@ -2,7 +2,13 @@
 
 
 def diccionario():
-    return {"validarOpcion": validarOpcion, "leerArchivo": leerArchivo}
+    return {
+        "validarOpcion": validarOpcion,
+        "leerArchivo": leerArchivo,
+        "agregarArchivo": agregarArchivo,
+        "validarInt": validarInt,
+        "validarFloat": validarFloat
+    }
 
 
 def validarOpcion(n):  # int
@@ -25,5 +31,44 @@ def leerArchivo(ruta):
         print("Objet-File: Archivo no encontrado. ")
         return None
 
+
+def agregarArchivo(ruta):  # void
+    archivo = object
+    try:
+        archivo = open(ruta, "a")
+        return archivo
+    except FileNotFoundError:
+        print("Objet-File: Archivo no encontrado. ")
+        return None
+
+
+def validarInt(n):
+    valor = 0 # int
+    while True:
+        try:
+            valor = int(n)
+            if valor > 0:
+                return valor
+            else:
+                print("ERROR: Solo se admiten valores mayores que cero")
+                n = input("Ingrese el valor correcto: ")
+        except ValueError:
+            print("ERROR: Ingresó un valor no numérico")
+            n = input("Ingrese el valor correcto: ")
+
+
+def validarFloat(n):
+    valor = 0.0 # float
+    while True:
+        try:
+            valor = float(n)
+            if valor > 0:
+                return valor
+            else:
+                print("ERROR: Solo se admiten valores mayores que cero")
+                n = input("Ingrese el valor correcto: ")
+        except ValueError:
+            print("ERROR: Ingresó un valor no numérico")
+            n = input("Ingrese el valor correcto: ")
 
 validar = diccionario()

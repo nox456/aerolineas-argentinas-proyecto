@@ -16,7 +16,9 @@ def menuInventario():  # void
         solucion["listar"](archivo)
         archivo.close()
     elif opcion == 2:
-        print("agregar")
+        archivo = validar["agregarArchivo"]("inventario/articulos.bin")
+        solucion["agregar"](archivo)
+        archivo.close()
     elif opcion == 3:
         print("eliminar")
     elif opcion == 4:
