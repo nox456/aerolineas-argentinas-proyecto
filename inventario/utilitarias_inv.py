@@ -7,7 +7,7 @@ def diccionario():
         "leerArchivo": leerArchivo,
         "agregarArchivo": agregarArchivo,
         "validarInt": validarInt,
-        "validarFloat": validarFloat
+        "validarFloat": validarFloat,
     }
 
 
@@ -19,7 +19,7 @@ def validarOpcion(n):  # int
             return valor
         except ValueError:
             print("ERROR: Valor incorrecto!")
-            n = input("Ingrese un valor correcto")
+            n = input("Ingrese un valor correcto: ")
 
 
 def leerArchivo(ruta):
@@ -43,7 +43,7 @@ def agregarArchivo(ruta):  # void
 
 
 def validarInt(n):
-    valor = 0 # int
+    valor = 0  # int
     while True:
         try:
             valor = int(n)
@@ -58,7 +58,7 @@ def validarInt(n):
 
 
 def validarFloat(n):
-    valor = 0.0 # float
+    valor = 0.0  # float
     while True:
         try:
             valor = float(n)
@@ -70,5 +70,6 @@ def validarFloat(n):
         except ValueError:
             print("ERROR: Ingresó un valor no numérico")
             n = input("Ingrese el valor correcto: ")
+
 
 validar = diccionario()

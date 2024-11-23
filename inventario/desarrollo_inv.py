@@ -1,5 +1,6 @@
 from .utilitarias_inv import validar
 
+
 def diccionario():
     return {"listar": listar, "agregar": agregar}
 
@@ -19,17 +20,17 @@ def listar(archivo):
         print("------------------------------------")
 
 
-def agregar(archivo): # void
+def agregar(archivo):  # void
     nombre = ""  # str
     cantidad = 0  # int
     precio = 0.0  # float
     if archivo != None:
         print("\n-AGREGAR ARTÍCULOS")
         nombre = input("Ingrese el Nombre del Artículo: ")
+        precio = validar["validarFloat"](input("Ingrese el precio: "))
         cantidad = validar["validarInt"](input("Ingrese la cantidad: "))
-        precio = validar["validarFloat"](input("Ingrese el precio total: "))
-        archivo.write("{0}#{1}#{2}\n".format(nombre, cantidad, precio))
-        print("\n---ARTÍCULO AGREGADO---")
+        archivo.write("Artículo#{0}#{1}#No Pagado\n".format(nombre, cantidad * precio))
+        print("\n---ARTÍCULO AGREGADO A LA LISTA DE PAGOS---")
 
 
 solucion = diccionario()
