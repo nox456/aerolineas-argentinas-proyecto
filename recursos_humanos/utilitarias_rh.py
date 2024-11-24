@@ -6,6 +6,7 @@ def diccionario():
     "opcion": validarOpcion,
     "leerArchivo": leerArchivo,
     "agregarArchivo": agregarArchivo,
+    "escribirArchivo": escribirArchivo,
     "entero": validarInt,
 }
 
@@ -43,6 +44,16 @@ def agregarArchivo(ruta):  # object archivo
         return None
 
 
+def escribirArchivo(ruta):
+    archivo = object
+    try:
+        archivo = open(ruta, "wb")
+        return archivo
+    except FileNotFoundError:
+        print("Object-File: Archivo no encontrado. ")
+        return None
+    
+
 def validarInt(n):
     valor = 0  # int
     while True:
@@ -55,7 +66,8 @@ def validarInt(n):
                 n = input("Ingrese el valor correcto: ")
         except ValueError:
             print("ERROR: Valor incorrecto!")
-            n = input("Ingrese el valor correcto: ")
+            n = input("Ingrese el valor correcto: ")            
+
 
 
 validar = diccionario()
