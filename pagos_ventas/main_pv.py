@@ -6,7 +6,6 @@ def menuPagosVentas():  # void
     opcion = 0  # int
     pagos = []  # arreglo bi str
     cantidad = []  # arreglo uni int
-    nombreArchivo = ""  # str
     archivo = object
     print("\n**** PAGOS Y VENTAS ****\n")
     print("1. Ver registro de pagos")
@@ -15,13 +14,13 @@ def menuPagosVentas():  # void
     print("3. SALIR DEL PROGRAMA\n")
     opcion = validar["validarOpcion"](input("Ingrese una opción del menú (1-3): "))
     if opcion == 1:
-        nombreArchivo = "pagos.txt"
-        archivo = validar["leerArchivo"](nombreArchivo)
+        archivo = validar["leerArchivo"]("pagos.txt")
         cantidad = solucion["cantidadReg"](archivo)
         archivo.seek(0)
         pagos = solucion["iniMatriz"](cantidad)
-        pagos = solucion["obtenerRegistros"](archivo, pagos)
+        solucion["obtenerRegistros"](archivo, pagos)
         solucion["listarPagos"](pagos)
+        archivo.close()
     elif opcion == 2:
         print("ventas")
     elif opcion == 3:

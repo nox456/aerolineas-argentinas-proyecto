@@ -24,13 +24,12 @@ def iniMatriz(cant):  # arreglo bi
         return []
 
 
-def obtenerRegistros(archivo, matriz):  # arreglo bi str
+def obtenerRegistros(archivo, matriz):  # void
     n = 0  # int
     if archivo != None and len(matriz) > 0:
         for registro in archivo:
             matriz[n] = registro.split("#")
             n += 1
-    return matriz
 
 
 def listarPagos(matriz):

@@ -22,20 +22,20 @@ def validarOpcion(n):  # int
             n = input("Ingrese un valor correcto: ")
 
 
-def leerArchivo(ruta):
+def leerArchivo(nombre):
     archivo = object
     try:
-        archivo = open(ruta)
+        archivo = open("inventario/" + nombre)
         return archivo
     except FileNotFoundError:
         print("Objet-File: Archivo no encontrado. ")
         return None
 
 
-def agregarArchivo(ruta):  # void
+def agregarArchivo(nombre):  # void
     archivo = object
     try:
-        archivo = open(ruta, "a")
+        archivo = open("inventario/" + nombre, "a")
         return archivo
     except FileNotFoundError:
         print("Objet-File: Archivo no encontrado. ")
