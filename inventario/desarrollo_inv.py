@@ -4,10 +4,13 @@ from .utilitarias_inv import validar
 def diccionario():
     return {
         "listar": listar,
-        "agregar": agregar,
+        "registrarPago": registrarPago,
+        "registrarVenta": registrarVenta,
         "cantidadReg": cantidadReg,
         "iniMatriz": iniMatriz,
         "obtenerRegistros": obtenerRegistros,
+        "obtenerPrecioRuta": obtenerPrecioRuta,
+        "obtenerAsientoVuelo": obtenerAsientoVuelo,
     }
 
 
@@ -42,7 +45,7 @@ def obtenerRegistros(archivo, matriz):  # void
 
 
 def listar(articulos):  # void
-    if len(articulos):
+    if len(articulos) > 0:
         print("\n-LISTA DE ARTÍCULOS")
         print("------------------------------------")
         print("{0:12}{1:3}  {2:6}".format("Nombre", "Cantidad", "Precio Total"))
@@ -55,7 +58,7 @@ def listar(articulos):  # void
         print("------------------------------------")
 
 
-def agregar(archivo):  # void
+def registrarPago(archivo):  # void
     nombre = ""  # str
     cantidad = 0  # int
     precio = 0.0  # float
@@ -70,6 +73,68 @@ def agregar(archivo):  # void
             )
         )
         print("\n---ARTÍCULO AGREGADO A LA LISTA DE PAGOS---")
+
+
+def obtenerPrecioRuta(rutas):  # float
+    precio = 0.0  # float
+    n = 0  # int
+    k = 0  # int
+    if len(rutas) > 0:
+        n = 1
+        print("\n-LISTA DE RUTAS")
+        print("------------------------------------")
+        print("   {0:15}  {1:10}".format("Destino", "Precio"))
+        for linea in rutas:
+            print("{0:>2} {1:15}  {2:6.2f}".format(n, linea[0], float(linea[1])))
+            n += 1
+        print("------------------------------------")
+        k = validar["validarInt"](input("Ingrese la ruta del viaje (1-" + str(n - 1) + "): "))
+        while k > (n - 1):
+            print("ERROR: Opción fuera de rango")
+            k = validar["validarInt"](input("Ingrese la ruta del viaje (1-" + str(n - 1) + "): "))
+        precio = float(rutas[k - 1][1])
+    return precio
+
+
+def obtenerAsientoVuelo(asientos):  # arreglo uni int
+    f = 0  # int
+    c = 0  # int
+    asiento = [0, 0]  # str
+    if len(asientos) > 0:
+        print("\n-LISTA DE ASIENTOS DISPONIBLES")
+        print("------------------------------------")
+        print("       Asiento   Asiento   Asiento   Asiento")
+        for fila in asientos:
+            print(
+                "{0:5}     {1:2}        {2:2}        {3:2}        {4:2}".format(
+                    fila[0], fila[1], fila[2], fila[3], fila[4]
+                )
+            )
+        f = validar["validarInt"](input("Ingrese la fila: "))
+        c = validar["validarInt"](input("Ingrese el asiento: "))
+        while f > 4 or c > 4:
+            print("ERROR: Selección fuera de rango")
+            f = validar["validarInt"](input("Ingrese la fila: "))
+            c = validar["validarInt"](input("Ingrese el asiento: "))
+        asiento[0] = asientos[f - 1][0]
+        asiento[1] = asientos[f - 1][c]
+        while asiento[1] == "VF":
+            print("ERROR: Asiento ya vendido, seleccione otro")
+            f = validar["validarInt"](input("Ingrese la fila: "))
+            c = validar["validarInt"](input("Ingrese el asiento: "))
+            asiento[0] = asientos[f - 1][0]
+            asiento[1] = asientos[f - 1][c]
+    return asiento
+
+
+def registrarVenta(archivo, asiento, precio): # void
+    if archivo != None:
+        archivo.write(
+            "Boleto#{0:5}-{1:2}#{2:6.2f}#No Pagado\n".format(
+                asiento[0], asiento[1], precio
+            ).encode("utf-8")
+        )
+        print("\n---BOLETO AGREGADO A LA LISTA DE VENTAS---")
 
 
 solucion = diccionario()

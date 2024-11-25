@@ -32,17 +32,17 @@ def leerArchivo(nombre):
         return None
 
 
-def agregarArchivo(nombre):  # void
+def agregarArchivo(ruta):  # void
     archivo = object
     try:
-        archivo = open("pagos_ventas/" + nombre, "ab")
+        archivo = open(ruta, "ab")
         return archivo
     except FileNotFoundError:
         print("Objet-File: Archivo no encontrado. ")
         return None
 
 
-def validarInt(n):
+def validarInt(n): # float
     valor = 0  # int
     while True:
         try:
@@ -57,7 +57,7 @@ def validarInt(n):
             n = input("Ingrese el valor correcto: ")
 
 
-def validarFloat(n):
+def validarFloat(n): # float
     valor = 0.0  # float
     while True:
         try:
