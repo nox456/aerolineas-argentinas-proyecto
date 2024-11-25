@@ -31,9 +31,8 @@ def validarOpcion(n):  # int
 
 def leerArchivo(nombre):  # object archivo
     archivo = object
-
     try:
-        archivo = open("recursos_humanos/" + nombre, "rb")
+        archivo = open(nombre, "rb")
         return archivo
     except FileNotFoundError:
         print("Objet-File: Archivo no encontrado. ")
@@ -44,7 +43,6 @@ def agregarArchivo(nombre):  # object archivo
     archivo = object
     try:
         archivo = open(nombre, "ab")
-        archivo = open("recursos_humanos/" + nombre, "ab")
         return archivo
     except FileNotFoundError:
         print("Objet-File: Archivo no encontrado. ")
