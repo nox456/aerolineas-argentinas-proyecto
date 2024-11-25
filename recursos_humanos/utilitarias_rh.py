@@ -3,11 +3,11 @@
 
 def diccionario():
     return {
-    "opcion": validarOpcion,
-    "leerArchivo": leerArchivo,
-    "agregarArchivo": agregarArchivo,
-    "entero": validarInt,
-}
+        "opcion": validarOpcion,
+        "leerArchivo": leerArchivo,
+        "agregarArchivo": agregarArchivo,
+        "entero": validarInt,
+    }
 
 
 def validarOpcion(n):  # int
@@ -19,24 +19,23 @@ def validarOpcion(n):  # int
         except ValueError:
             print("ERROR: Valor incorrecto!")
             n = input("Ingrese un valor correcto")
-            
 
 
-def leerArchivo(ruta):  # object archivo
+def leerArchivo(nombre):  # object archivo
     archivo = object
-    
+
     try:
-        archivo = open(ruta)
+        archivo = open("recursos_humanos/" + nombre, "rb")
         return archivo
     except FileNotFoundError:
         print("Objet-File: Archivo no encontrado. ")
         return None
 
 
-def agregarArchivo(ruta):  # object archivo
+def agregarArchivo(nombre):  # object archivo
     archivo = object
     try:
-        archivo = open(ruta, "a")
+        archivo = open("recursos_humanos/" + nombre, "ab")
         return archivo
     except FileNotFoundError:
         print("Objet-File: Archivo no encontrado. ")

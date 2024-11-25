@@ -1,3 +1,0 @@
-Artículo#Monitor#15000.0#No Pagado
-Artículo#Martillo#10000.0#No Pagado
-Artículo#Computadora#40000.0#No Pagado

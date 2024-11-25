@@ -15,9 +15,10 @@ def cantidadReg(archivo):  # arreglo uni int
     cant = [0, 0]  # int
     if archivo != None:
         for linea in archivo:
-            campos = linea.split("#")
+            campos = linea.decode("utf-8").split("#")
             cant[0] += 1
             cant[1] = len(campos)
+        archivo.seek(0)
     return cant
 
 
@@ -32,8 +33,12 @@ def obtenerRegistros(archivo, matriz):  # void
     n = 0  # int
     if archivo != None and len(matriz) > 0:
         for registro in archivo:
-            matriz[n] = registro.split("#")
+            matriz[n] = registro.decode("utf-8").split("#")
             n += 1
+    else:
+        print("-------------------")
+        print("No hay registros...")
+        print("-------------------")
 
 
 def listar(articulos):  # void
@@ -59,7 +64,11 @@ def agregar(archivo):  # void
         nombre = input("Ingrese el Nombre del Artículo: ")
         precio = validar["validarFloat"](input("Ingrese el precio: "))
         cantidad = validar["validarInt"](input("Ingrese la cantidad: "))
-        archivo.write("Artículo#{0}#{1}#No Pagado\n".format(nombre, cantidad * precio))
+        archivo.write(
+            "Artículo#{0}#{1}#No Pagado\n".format(nombre, cantidad * precio).encode(
+                "utf-8"
+            )
+        )
         print("\n---ARTÍCULO AGREGADO A LA LISTA DE PAGOS---")
 
 

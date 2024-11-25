@@ -1,11 +1,10 @@
 # Utilitarias
 
+
 def diccionario():
-    return {
-        "opcion": validarOpcion
-            }
-    
-    
+    return {"opcion": validarOpcion}
+
+
 def validarOpcion(n):  # int
     valor = 0  # int
     while True:
