@@ -130,7 +130,7 @@ def obtenerAsientoVuelo(asientos):  # arreglo uni int
 def registrarVenta(archivo, asiento, precio): # void
     if archivo != None:
         archivo.write(
-            "Boleto#{0:5}-{1:2}#{2:6.2f}#No Pagado\n".format(
+            "Boleto#{0:5}-{1:2}#{2:6.2f}#No Vendido\n".format(
                 asiento[0], asiento[1], precio
             ).encode("utf-8")
         )
