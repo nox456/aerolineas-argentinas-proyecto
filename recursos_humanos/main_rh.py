@@ -42,7 +42,16 @@ def menuRecursosHumanos():  # void
     elif opcion == 3:
         solucion["liquidacion"]()
     elif opcion == 4:
-        print("nomina")
+        archivo = validar["leerArchivo"]("personal.bin")
+        if archivo == None:
+            return
+        cantidad = solucion["cantidadReg"](archivo)
+        empleados = solucion["iniMatriz"](cantidad)
+        solucion["obtenerRegistros"](archivo, empleados)
+        archivo = validar["leerArchivo"]("personal.bin")
+        if archivo == None:
+            return
+        solucion["nomina"](archivo, empleados)
     elif opcion == 5:
         print("GRACIAS POR USAR EL SOFTWARE!")
     else:

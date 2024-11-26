@@ -12,6 +12,7 @@ def diccionario():
         "validarDia": validarDia,
         "validarMes": validarMes,
         "validarAno": validarAno,
+        "validarFloat": validarFloat,
         "crearArchivo": crearArchivo,
         "validarNombre": validarNombre,
         "manejoNombre": manejoNombre,
@@ -49,7 +50,7 @@ def agregarArchivo(ruta):  # object archivo
         return None
 
 
-def escribirArchivo(ruta):
+def escribirArchivo(ruta):  # object archivo
     archivo = object
     try:
         archivo = open(ruta, "wb")
@@ -59,7 +60,7 @@ def escribirArchivo(ruta):
         return None
 
 
-def validarInt(n):
+def validarInt(n): # int
     valor = 0  # int
     while True:
         try:
@@ -74,7 +75,7 @@ def validarInt(n):
             n = input("Ingrese el valor correcto: ")
 
 
-def validarOpcionDict(opcion, diccionario):
+def validarOpcionDict(opcion, diccionario): # int
     while True:
         try:
             opcion = int(opcion)
@@ -86,7 +87,7 @@ def validarOpcionDict(opcion, diccionario):
             opcion = input("Ingrese una opción válida: ")
 
 
-def validarDia(dia):
+def validarDia(dia): # int
     while True:
         dia = validarInt(dia)
         if 1 <= dia <= 31:
@@ -94,7 +95,7 @@ def validarDia(dia):
         dia = input("Ingrese un día válido: ")
 
 
-def validarMes(mes):
+def validarMes(mes): # int
     while True:
         mes = validarInt(mes)
         if 1 <= mes <= 12:
@@ -102,7 +103,7 @@ def validarMes(mes):
         mes = input("Ingrese un mes válido: ")
 
 
-def validarAno(ano):
+def validarAno(ano): # int
     while True:
         ano = validarInt(ano)
         if ano >= 1950:
@@ -166,6 +167,21 @@ def manejoNombre(nombre):
             nombre = input("Ingrese un nombre o apellido válido: ")
         else:
             return nombre
+
+
+def validarFloat(n):  # float
+    valor = 0.0  # float
+    while True:
+        try:
+            valor = float(n)
+            if valor >= 0:
+                return valor
+            else:
+                print("ERROR: No se admiten valores negativos!")
+                n = input("Ingrese el valor correcto: ")
+        except ValueError:
+            print("ERROR: Valor incorrecto!")
+            n = input("Ingrese el valor correcto: ")
 
 
 validar = diccionario()
