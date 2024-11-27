@@ -184,7 +184,7 @@ def liquidacion():  # void
         return
 
     fila_columna = determinarTamaño(archivo)
-    datos = iniTextoBinario(fila_columna[0])
+    datos = iniTextoBinario(fila_columna[1])
     datos = datosEmpleado(archivo, posicion, datos)
     fecha_ingreso[0] = int(datos[7])
     fecha_ingreso[1] = int(datos[8])
@@ -560,7 +560,7 @@ def vacaciones(años_antiguedad):  # int
             return 35
 
 
-def datosEmpleado(archivo, posicion, arreglo):  # void
+def datosEmpleado(archivo, posicion, arreglo):  # arreglo uni str
     if archivo == None:
         print("Object file -- does not exist")
         return
