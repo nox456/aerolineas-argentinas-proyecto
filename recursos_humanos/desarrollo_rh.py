@@ -99,8 +99,8 @@ def agregar(archivo, roles):  # void
     n = 0  # int
     indice_rol = 0  # int
     if archivo != None and len(roles) > 0:
-        nombre = input("Ingrese el nombre del empleado: ")
-        apellido = input("Ingrese el apellido del empleado: ")
+        nombre = validar["manejoNombre"](input("Ingrese el nombre del empleado: "))
+        apellido = validar["manejoNombre"](input("Ingrese el apellido del empleado: "))
         cedula = validar["entero"](input("Ingrese la cédula del empleado: "))
         edad = validar["entero"](input("Ingrese la edad del empleado: "))
         fecha = validar["entero"](input("Ingrese el año de nacimiento del empleado: "))
@@ -128,7 +128,7 @@ def agregar(archivo, roles):  # void
                     cargo = rol[0]
                     salario = float(rol[1])
             archivo.write(
-                "\n{0}#{1}#{2}#{3}#{4}#{5}#{6}#{7}#{8}#{9}".format(
+                "{0}#{1}#{2}#{3}#{4}#{5}#{6}#{7}#{8}#{9}\n".format(
                     nombre,
                     apellido,
                     cedula,
@@ -702,55 +702,56 @@ def nomina(archivo, empleados):
     salario = 0.0  # float
     salario_neto = 0.0  # float
     nomina_archivo = object
-    nombre = validar["manejoNombre"](input("Ingrese el nombre del empleado: "))
-    apellido = validar["manejoNombre"](input("Ingrese el apellido del empleado: "))
-    posicion = buscar(archivo, nombre, apellido)
-    salario = float(empleados[posicion][6])
-    print("\n--- Deducciones ---\n")
-    ap_jub = validar["validarFloat"](input("Aportes Jubilatorios (%): "))
-    ap_os = validar["validarFloat"](input("Aportes a la obra social (%): "))
-    ap_sd = validar["validarFloat"](input("Aportes sindicales (%): "))
-    imp_gan = validar["validarFloat"](input("Impuesto a las ganancias ($): "))
-    deducciones = (
-        (salario * ap_jub / 100)
-        + (salario * ap_os / 100)
-        + (salario * ap_sd / 100)
-        + imp_gan
-    )
-    salario_neto = salario - deducciones
-    nomina_archivo = validar["crearArchivo"]("Nomina-{0}-{1}".format(nombre, apellido))
-    nomina_archivo.write("---------------------------------------------------------------\n")
-    nomina_archivo.write("                            Nomina                   \n")
-    nomina_archivo.write("---------------------------------------------------------------\n")
-    nomina_archivo.write(
-        "Nombre: {0}                                 \n".format(nombre)
-    )
-    nomina_archivo.write(
-        "Apellido: {0}                               \n".format(apellido)
-    )
-    nomina_archivo.write("                          Deducciones                 \n")
-    nomina_archivo.write("---------------------------------------------------------------\n")
-    nomina_archivo.write(
-        "Aportes Jubilatorios: {0} %                 \n".format(ap_jub)
-    )
-    nomina_archivo.write(
-        "Aportes a la obra social: {0} %             \n".format(ap_os)
-    )
-    nomina_archivo.write(
-        "Aportes sindicales: {0} %                   \n".format(ap_sd)
-    )
-    nomina_archivo.write(
-        "Impuesto a las ganancias: {0} $             \n".format(imp_gan)
-    )
-    nomina_archivo.write("---------------------------------------------------------------\n")
-    nomina_archivo.write(
-        "Salario Base: {0} $         Salario Neto: {1} $ \n".format(
-            salario, salario_neto
+    if archivo != None and len(empleados) > 0:
+        nombre = validar["manejoNombre"](input("Ingrese el nombre del empleado: "))
+        apellido = validar["manejoNombre"](input("Ingrese el apellido del empleado: "))
+        posicion = buscar(archivo, nombre, apellido)
+        salario = float(empleados[posicion][6])
+        print("\n--- Deducciones ---\n")
+        ap_jub = validar["validarFloat"](input("Aportes Jubilatorios (%): "))
+        ap_os = validar["validarFloat"](input("Aportes a la obra social (%): "))
+        ap_sd = validar["validarFloat"](input("Aportes sindicales (%): "))
+        imp_gan = validar["validarFloat"](input("Impuesto a las ganancias ($): "))
+        deducciones = (
+            (salario * ap_jub / 100)
+            + (salario * ap_os / 100)
+            + (salario * ap_sd / 100)
+            + imp_gan
         )
-    )
-    nomina_archivo.write("---------------------------------------------------------------\n")
-    nomina_archivo.close()
-    print("¡Nómina Creada!")
+        salario_neto = salario - deducciones
+        nomina_archivo = validar["crearArchivo"]("Nomina-{0}-{1}".format(nombre, apellido))
+        nomina_archivo.write("---------------------------------------------------------------\n")
+        nomina_archivo.write("                            Nomina                   \n")
+        nomina_archivo.write("---------------------------------------------------------------\n")
+        nomina_archivo.write(
+            "Nombre: {0}                                 \n".format(nombre)
+        )
+        nomina_archivo.write(
+            "Apellido: {0}                               \n".format(apellido)
+        )
+        nomina_archivo.write("                          Deducciones                 \n")
+        nomina_archivo.write("---------------------------------------------------------------\n")
+        nomina_archivo.write(
+            "Aportes Jubilatorios: {0} %                 \n".format(ap_jub)
+        )
+        nomina_archivo.write(
+            "Aportes a la obra social: {0} %             \n".format(ap_os)
+        )
+        nomina_archivo.write(
+            "Aportes sindicales: {0} %                   \n".format(ap_sd)
+        )
+        nomina_archivo.write(
+            "Impuesto a las ganancias: {0} $             \n".format(imp_gan)
+        )
+        nomina_archivo.write("---------------------------------------------------------------\n")
+        nomina_archivo.write(
+            "Salario Base: {0} $         Salario Neto: {1} $ \n".format(
+                salario, salario_neto
+            )
+        )
+        nomina_archivo.write("---------------------------------------------------------------\n")
+        nomina_archivo.close()
+        print("¡Nómina Creada!")
 
 
 solucion = diccionario()
