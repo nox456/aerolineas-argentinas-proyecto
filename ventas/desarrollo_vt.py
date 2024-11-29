@@ -1,5 +1,6 @@
 from .utilitarias_vt import validar
 from inventario.desarrollo_inv import solucion as solucion_inv
+from recursos_humanos.desarrollo_rh import solucion as solucion_rh
 
 
 def diccionario():
@@ -54,12 +55,19 @@ def listar(ventas):  # void
             )
         )
         for linea in ventas:
-            print(
-                "{0:10} {1:25} {2:10.2f} $ {3:8}".format(
-                    linea[0], linea[1], float(linea[2]), linea[3]
-                ),
-                end="",
-            )
+            if linea[0] == "Boleto":
+                print(
+                    "{0:10} {1:25} {2:10.2f} $ {3:8}".format(
+                        linea[0], linea[1], float(linea[2]), linea[3]
+                    ),
+                    end="",
+                )
+            elif linea[0] == "Nomina":
+                print(
+                    "{0:10} {1:25} {2:10.2f} $ {3:8}".format(
+                        linea[0], "-".join(linea[1].split("-")[0:2]), float(linea[2]), linea[3]
+                    )
+                )
         print("----------------------------------------------------------------")
 
 
@@ -80,11 +88,19 @@ def vender(noVendidos, ventas):  # void
         print("\n-REGISTROS SIN VENDER")
         for i in range(len(noVendidos)):
             n += 1
-            print(
-                "{0}. {1} - {2} - {3:.2f} $".format(
-                    n, noVendidos[i][0], noVendidos[i][1], float(noVendidos[i][2])
+            if noVendidos[i][0] == "Boleto":
+                print(
+                    "{0}. {1} - {2} - {3:.2f} $".format(
+                        n, noVendidos[i][0], noVendidos[i][1], float(noVendidos[i][2])
+                    )
                 )
-            )
+            elif noVendidos[i][0] == "Nomina":
+                print(
+                    "{0}. {1} - {2} - {3:.2f} $".format(
+                        n, noVendidos[i][0], "-".join(noVendidos[i][1].split("-")[0:2]), float(noVendidos[i][2])
+                    )
+                )
+
         reg = validar["validarInt"](input("Ingrese el registro (1-" + str(n) + "): "))
         while reg < 1 or reg > n:
             print("ERROR: Selección fuera de rango!")
@@ -135,8 +151,12 @@ def vender(noVendidos, ventas):  # void
                         ).encode("utf-8")
                     )
             print("--- ABONO REALIZADO ---")
-            print("--- BOLETO VENDIDO ---")
-            solucion_inv["boletoVendido"](nombre.split("-")[0],nombre.split("-")[1], nombre.split("-")[2])
+            if tipo == "Boleto":
+                solucion_inv["boletoVendido"](nombre.split("-")[0],nombre.split("-")[1], nombre.split("-")[2])
+                print("--- BOLETO VENDIDO ---")
+            elif tipo == "Nomina":
+                print("--- NOMINA CREADA ---")
+                solucion_rh["crearNomina"](nombre.split("-"))
             print("Devolución al usuario: " + str(restante) + " $")
         else:
             for i in range(len(ventas)):
@@ -156,8 +176,12 @@ def vender(noVendidos, ventas):  # void
                         ).encode("utf-8")
                     )
             print("--- ABONO REALIZADO ---")
-            print("--- BOLETO VENDIDO ---")
-            solucion_inv["boletoVendido"](nombre.split("-")[0],nombre.split("-")[1], nombre.split("-")[2])
+            if tipo == "Boleto":
+                solucion_inv["boletoVendido"](nombre.split("-")[0],nombre.split("-")[1], nombre.split("-")[2])
+                print("--- BOLETO VENDIDO ---")
+            elif tipo == "Nomina":
+                print("--- NOMINA CREADA ---")
+                solucion_rh["crearNomina"](nombre.split("-"))
 
 
 solucion = diccionario()

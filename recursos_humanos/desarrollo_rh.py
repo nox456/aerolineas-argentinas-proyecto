@@ -12,7 +12,8 @@ def diccionario():
         "nomina": nomina,
         "generarArchivoRenuncia": generarArchivoRenuncia,
         "generarArchivoDespido": generarArchivoDespido,
-        "eliminarRegistro": eliminarRegistro
+        "eliminarRegistro": eliminarRegistro,
+        "crearNomina": crearNomina
     }
 
 
@@ -212,7 +213,9 @@ def liquidacion():  # void
         fecha_actual[1],
         sueldo_basico,
     )
-    registrarPago(datos, calculos, fecha_actual, dias_antiguedad,motivo,"pagos/pagos.bin")
+    registrarPago(
+        datos, calculos, fecha_actual, dias_antiguedad, motivo, "pagos/pagos.bin"
+    )
     print("¡Liquidación registrada en el módulo de pagos!")
     return
 
@@ -690,10 +693,13 @@ def nomina(archivo, empleados):
     salario = 0.0  # float
     salario_neto = 0.0  # float
     nomina_archivo = object
+    ventas_archivo = object
     if archivo != None and len(empleados) > 0:
         nombre = validar["manejoNombre"](input("Ingrese el nombre del empleado: "))
         apellido = validar["manejoNombre"](input("Ingrese el apellido del empleado: "))
         posicion = buscar(archivo, nombre, apellido)
+        if posicion == None:
+            return
         salario = float(empleados[posicion][6])
         print("\n--- Deducciones ---\n")
         ap_jub = validar["validarFloat"](input("Aportes Jubilatorios (%): "))
@@ -707,9 +713,29 @@ def nomina(archivo, empleados):
             + imp_gan
         )
         salario_neto = salario - deducciones
-        nomina_archivo = validar["crearArchivo"](
-            "Nomina-{0}-{1}".format(nombre, apellido)
+        ventas_archivo = validar["agregarArchivo"]("ventas/ventas.bin")
+        ventas_archivo.write(
+            "Nomina#{0}-{1}-{2}-{3}-{4}-{5}-{6}-{7}#{8}#No Vendido".format(
+                nombre,
+                apellido,
+                salario,
+                salario_neto,
+                ap_jub,
+                ap_os,
+                ap_sd,
+                imp_gan,
+                deducciones,
+            ).encode("utf-8")
         )
+        print("--- REGISTRO DE NÓMINA CREADO EN EL MÓDULO DE VENTAS ---")
+
+
+def crearNomina(datos): # void
+    nomina_archivo = object
+    nomina_archivo = validar["crearArchivo"](
+        "Nomina-{0}-{1}".format(datos[0], datos[1])
+    )
+    if nomina_archivo != None:
         nomina_archivo.write(
             "---------------------------------------------------------------\n"
         )
@@ -718,40 +744,39 @@ def nomina(archivo, empleados):
             "---------------------------------------------------------------\n"
         )
         nomina_archivo.write(
-            "Nombre: {0}                                 \n".format(nombre)
+            "Nombre: {0}                                 \n".format(datos[0])
         )
         nomina_archivo.write(
-            "Apellido: {0}                               \n".format(apellido)
+            "Apellido: {0}                               \n".format(datos[1])
         )
         nomina_archivo.write("                          Deducciones                 \n")
         nomina_archivo.write(
             "---------------------------------------------------------------\n"
         )
         nomina_archivo.write(
-            "Aportes Jubilatorios: {0} %                 \n".format(ap_jub)
+            "Aportes Jubilatorios: {0} %                 \n".format(datos[4])
         )
         nomina_archivo.write(
-            "Aportes a la obra social: {0} %             \n".format(ap_os)
+            "Aportes a la obra social: {0} %             \n".format(datos[5])
         )
         nomina_archivo.write(
-            "Aportes sindicales: {0} %                   \n".format(ap_sd)
+            "Aportes sindicales: {0} %                   \n".format(datos[6])
         )
         nomina_archivo.write(
-            "Impuesto a las ganancias: {0} $             \n".format(imp_gan)
+            "Impuesto a las ganancias: {0} $             \n".format(datos[7])
         )
         nomina_archivo.write(
             "---------------------------------------------------------------\n"
         )
         nomina_archivo.write(
             "Salario Base: {0} $         Salario Neto: {1} $ \n".format(
-                salario, salario_neto
+                datos[2], datos[3]
             )
         )
         nomina_archivo.write(
             "---------------------------------------------------------------\n"
         )
         nomina_archivo.close()
-        print("¡Nómina Creada!")
 
 
 solucion = diccionario()
