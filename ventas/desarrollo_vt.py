@@ -136,7 +136,7 @@ def vender(noVendidos, ventas):  # void
                     )
             print("--- ABONO REALIZADO ---")
             print("--- BOLETO VENDIDO ---")
-            solucion_inv["boletoVendido"](nombre.split("-")[1], nombre.split("-")[2])
+            solucion_inv["boletoVendido"](nombre.split("-")[0],nombre.split("-")[1], nombre.split("-")[2])
             print("Devolución al usuario: " + str(restante) + " $")
         else:
             for i in range(len(ventas)):
@@ -157,7 +157,7 @@ def vender(noVendidos, ventas):  # void
                     )
             print("--- ABONO REALIZADO ---")
             print("--- BOLETO VENDIDO ---")
-            solucion_inv["boletoVendido"](nombre.split("-")[1], nombre.split("-")[2])
+            solucion_inv["boletoVendido"](nombre.split("-")[0],nombre.split("-")[1], nombre.split("-")[2])
 
 
 solucion = diccionario()

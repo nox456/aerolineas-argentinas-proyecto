@@ -14,6 +14,8 @@ def diccionario():
         "obtenerAsientoVuelo": obtenerAsientoVuelo,
         "agregar": agregar,
         "boletoVendido": boletoVendido,
+        "obtenerAvion": obtenerAvion,
+        "mostrarAsientos": mostrarAsientos,
     }
 
 
@@ -155,16 +157,30 @@ def agregar(nombre, cantidad):  # void
         archivo.close()
 
 
-def boletoVendido(fila, asiento):  # void
+def boletoVendido(avion, fila, asiento):  # void
     archivo = object
     cantidad = []  # arreglo uni int
     asientos = []  # arreglo bi string
-    archivo = validar["leerArchivo"]("avion.bin")
+    if avion == "Estados Unidos":
+        archivo = validar["leerArchivo"]("avionEU.bin")
+    elif avion == "Venezuela":
+        archivo = validar["leerArchivo"]("avionVE.bin")
+    elif avion == "México":
+        archivo = validar["leerArchivo"]("avionME.bin")
+    elif avion == "Colombia":
+        archivo = validar["leerArchivo"]("avionCO.bin")
     cantidad = solucion["cantidadReg"](archivo)
     asientos = solucion["iniMatriz"](cantidad)
     solucion["obtenerRegistros"](archivo, asientos)
     archivo.close()
-    archivo = validar["escribirArchivo"]("avion.bin")
+    if avion == "Estados Unidos":
+        archivo = validar["escribirArchivo"]("avionEU.bin")
+    elif avion == "Venezuela":
+        archivo = validar["escribirArchivo"]("avionVE.bin")
+    elif avion == "México":
+        archivo = validar["escribirArchivo"]("avionME.bin")
+    elif avion == "Colombia":
+        archivo = validar["escribirArchivo"]("avionCO.bin")
     if archivo != None:
         for i in range(len(asientos)):
             archivo.write("{0}".format(asientos[i][0]).encode("utf-8"))
@@ -175,6 +191,37 @@ def boletoVendido(fila, asiento):  # void
                     archivo.write("#{0}".format(asientos[i][j].strip()).encode("utf-8"))
             archivo.write("\n".encode("utf-8"))
         archivo.close()
+
+
+def obtenerAvion(rutas):  # str
+    avion = ""  # str
+    n = 0  # int
+    k = 0  # int
+    if len(rutas) > 0:
+        print("\n-LISTA DE AVIONES")
+        for i in range(len(rutas)):
+            n += 1
+            print("{0}. {1}".format(n, rutas[i][0]))
+        k = validar["validarInt"](input("Ingrese la opción (1-" + str(n) + "): "))
+        while k < 1 or k > n:
+            print("ERROR: Opción fuera de rango")
+            k = validar["validarInt"](input("Ingrese la opción (1-" + str(n) + "): "))
+        avion = rutas[k - 1][0]
+    return avion
+
+
+def mostrarAsientos(asientos):  # void
+    if len(asientos) > 0:
+        print("\n-LISTA DE ASIENTOS")
+        print("-----------------------------------------------")
+        print("       Asiento   Asiento   Asiento   Asiento")
+        for fila in asientos:
+            print(
+                "{0:5}     {1:2}        {2:2}        {3:2}        {4:2}".format(
+                    fila[0], fila[1], fila[2], fila[3], fila[4]
+                )
+            )
+        print("-----------------------------------------------")
 
 
 solucion = diccionario()
