@@ -8,9 +8,10 @@ def menuInventario():  # void
     cantidad = []  # arreglo uni int
     articulos = []  # arreglo bi str
     rutas = []  # arreglo bi str
-    precio = 0.0 # float
-    asientos = [] # arreglo bi str
-    asiento = "" # str
+    ruta = ""  # string
+    precio = 0.0  # float
+    asientos = []  # arreglo bi str
+    asiento = ""  # str
     print("\n**** INVENTARIO ****\n")
     print("1. Listar artículos")
     print("2. Agregar artículo (Comprar)")
@@ -41,7 +42,8 @@ def menuInventario():  # void
         cantidad = solucion["cantidadReg"](archivo)
         rutas = solucion["iniMatriz"](cantidad)
         solucion["obtenerRegistros"](archivo, rutas)
-        precio = solucion["obtenerPrecioRuta"](rutas)
+        ruta = solucion["obtenerRuta"](rutas)
+        precio = solucion["obtenerPrecio"](rutas, ruta)
         archivo.close()
         archivo = validar["leerArchivo"]("avion.bin")
         if archivo == None:
@@ -51,12 +53,11 @@ def menuInventario():  # void
         solucion["obtenerRegistros"](archivo, asientos)
         asiento = solucion["obtenerAsientoVuelo"](asientos)
         archivo.close()
-        print("FALTA IMPLEMENTACIÓN DE AGREGAR UN REGISTRO AL MÓDULO DE VENTAS")
-        # archivo = validar["agregarArchivo"]("ventas/ventas.bin")
-        # if archivo == None:
-        #     return
-        # solucion["registrarVenta"](archivo, asiento, precio)
-        # archivo.close()
+        archivo = validar["agregarArchivo"]("ventas/ventas.bin")
+        if archivo == None:
+            return
+        solucion["registrarVenta"](archivo, asiento, ruta, precio)
+        archivo.close()
     elif opcion == 4:
         print("GRACIAS POR USAR EL SOFTWARE!")
     else:

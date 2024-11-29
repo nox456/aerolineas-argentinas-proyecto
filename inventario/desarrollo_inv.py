@@ -9,7 +9,8 @@ def diccionario():
         "cantidadReg": cantidadReg,
         "iniMatriz": iniMatriz,
         "obtenerRegistros": obtenerRegistros,
-        "obtenerPrecioRuta": obtenerPrecioRuta,
+        "obtenerRuta": obtenerRuta,
+        "obtenerPrecio": obtenerPrecio,
         "obtenerAsientoVuelo": obtenerAsientoVuelo,
     }
 
@@ -75,8 +76,7 @@ def registrarPago(archivo):  # void
         print("\n---ARTÍCULO AGREGADO A LA LISTA DE PAGOS---")
 
 
-def obtenerPrecioRuta(rutas):  # float
-    precio = 0.0  # float
+def obtenerRuta(rutas):  # string
     n = 0  # int
     k = 0  # int
     if len(rutas) > 0:
@@ -88,11 +88,23 @@ def obtenerPrecioRuta(rutas):  # float
             print("{0:>2} {1:15}  {2:6.2f}".format(n, linea[0], float(linea[1])))
             n += 1
         print("------------------------------------")
-        k = validar["validarInt"](input("Ingrese la ruta del viaje (1-" + str(n - 1) + "): "))
+        k = validar["validarInt"](
+            input("Ingrese la ruta del viaje (1-" + str(n - 1) + "): ")
+        )
         while k > (n - 1):
             print("ERROR: Opción fuera de rango")
-            k = validar["validarInt"](input("Ingrese la ruta del viaje (1-" + str(n - 1) + "): "))
-        precio = float(rutas[k - 1][1])
+            k = validar["validarInt"](
+                input("Ingrese la ruta del viaje (1-" + str(n - 1) + "): ")
+            )
+    return rutas[k - 1][0]
+
+
+def obtenerPrecio(rutas, ruta):  # float
+    precio = 0.0  # float
+    if len(rutas) > 0:
+        for i in range(len(rutas)):
+            if rutas[i][0] == ruta:
+                precio = float(rutas[i][1])
     return precio
 
 
@@ -127,11 +139,11 @@ def obtenerAsientoVuelo(asientos):  # arreglo uni int
     return asiento
 
 
-def registrarVenta(archivo, asiento, precio): # void
+def registrarVenta(archivo, asiento, ruta, precio):  # void
     if archivo != None:
         archivo.write(
-            "Boleto#{0:5}-{1:2}#{2:6.2f}#No Vendido\n".format(
-                asiento[0], asiento[1], precio
+            "Boleto#{0}-{1}-{2}#{3:.2f}#No Vendido\n".format(
+                ruta, asiento[0], asiento[1], precio
             ).encode("utf-8")
         )
         print("\n---BOLETO AGREGADO A LA LISTA DE VENTAS---")
