@@ -13,7 +13,8 @@ def diccionario():
         "generarArchivoRenuncia": generarArchivoRenuncia,
         "generarArchivoDespido": generarArchivoDespido,
         "eliminarRegistro": eliminarRegistro,
-        "crearNomina": crearNomina
+        "crearNomina": crearNomina,
+        "razonCancelacion": razonCancelacion,
     }
 
 
@@ -150,7 +151,7 @@ def agregar(archivo, roles):  # void
 
 def liquidacion():  # void
     archivo = object  # objeto
-    archivo = validar["leerArchivo"]("personal.bin")
+    archivo = validar["leerArchivo"]("recursos_humanos/personal.bin")
 
     if archivo == None:
         print("Object file -- does not exist")
@@ -574,7 +575,7 @@ def eliminarRegistro(nombre, apellido):  # void
         texto_binario = []  # arreglo bi str
         archivo = object  # objeto
 
-        archivo = validar["leerArchivo"]("personal.bin")
+        archivo = validar["leerArchivo"]("recursos_humanos/personal.bin")
 
         if archivo == None:
             print("Object file -- does not exist")
@@ -730,7 +731,7 @@ def nomina(archivo, empleados):
         print("--- REGISTRO DE NÓMINA CREADO EN EL MÓDULO DE VENTAS ---")
 
 
-def crearNomina(datos): # void
+def crearNomina(datos):  # void
     nomina_archivo = object
     nomina_archivo = validar["crearArchivo"](
         "Nomina-{0}-{1}".format(datos[0], datos[1])
@@ -777,6 +778,22 @@ def crearNomina(datos): # void
             "---------------------------------------------------------------\n"
         )
         nomina_archivo.close()
+
+
+def razonCancelacion():  # string
+    opcion = 0  # int
+    print("\n-RAZONES DE CANCELACIÓN")
+    print("1. Falla en el avión")
+    print("2. Inconveniente con pasajero")
+    opcion = validar["opcion"](input("Ingrese la opción (1-2): "))
+    while opcion < 1 or opcion > 2:
+        print("ERROR: Opción fuera de rango!")
+        opcion = validar["opcion"](input("Ingrese la opción (1-2): "))
+    if opcion == 1:
+        return "Avion"
+    else:
+        return "Pasajero"
+
 
 
 solucion = diccionario()

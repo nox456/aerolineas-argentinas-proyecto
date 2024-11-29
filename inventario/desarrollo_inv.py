@@ -16,6 +16,9 @@ def diccionario():
         "boletoVendido": boletoVendido,
         "obtenerAvion": obtenerAvion,
         "mostrarAsientos": mostrarAsientos,
+        "devolverAsientos": devolverAsientos,
+        "devolverDineroTodo": devolverDineroTodo,
+        "devolverDinero": devolverDinero,
     }
 
 
@@ -222,6 +225,118 @@ def mostrarAsientos(asientos):  # void
                 )
             )
         print("-----------------------------------------------")
+
+
+def devolverDineroTodo(avion, rutas):  # float
+    monto_final = 0.0  # float
+    monto = 0.0  # float
+    archivo = object
+    for i in range(len(rutas)):
+        if rutas[i][0] == avion:
+            monto = float(rutas[i][1])
+    if avion == "Estados Unidos":
+        archivo = validar["leerArchivo"]("avionEU.bin")
+    elif avion == "Venezuela":
+        archivo = validar["leerArchivo"]("avionVE.bin")
+    elif avion == "México":
+        archivo = validar["leerArchivo"]("avionME.bin")
+    elif avion == "Colombia":
+        archivo = validar["leerArchivo"]("avionCO.bin")
+    if archivo != None:
+        for linea in archivo:
+            for campo in linea.decode("utf-8").split("#"):
+                if campo == "VF":
+                    monto_final += monto
+    return monto_final
+
+
+def devolverAsientos(avion):
+    f = 0  # int
+    c = 0  # int
+    archivo = object
+    f = 4
+    c = 4
+    if avion == "Estados Unidos":
+        archivo = validar["escribirArchivo"]("avionEU.bin")
+    elif avion == "Venezuela":
+        archivo = validar["escribirArchivo"]("avionVE.bin")
+    elif avion == "México":
+        archivo = validar["escribirArchivo"]("avionME.bin")
+    elif avion == "Colombia":
+        archivo = validar["escribirArchivo"]("avionCO.bin")
+    if archivo != None:
+        for i in range(f):
+            archivo.write("Fila{}".format(i + 1).encode("utf-8"))
+            for j in range(c):
+                archivo.write("#0{}".format(j + 1).encode("utf-8"))
+            archivo.write("\n".encode("utf-8"))
+
+        archivo.close()
+
+
+def devolverDinero(avion):  # void
+    fila = 0  # int
+    asiento = 0  # int
+    asientos = []  # arreglo bi str
+    cantidad = []  # arreglo uni int
+    rutas = [] # arreglo uni str
+    archivo = object
+    archivo = validar["leerArchivo"]("rutas.bin")
+    cantidad = solucion["cantidadReg"](archivo)
+    rutas = solucion["iniMatriz"](cantidad)
+    solucion["obtenerRegistros"](archivo, rutas)
+    if avion == "Estados Unidos":
+        archivo = validar["leerArchivo"]("avionEU.bin")
+    elif avion == "Venezuela":
+        archivo = validar["leerArchivo"]("avionVE.bin")
+    elif avion == "México":
+        archivo = validar["leerArchivo"]("avionME.bin")
+    elif avion == "Colombia":
+        archivo = validar["leerArchivo"]("avionCO.bin")
+    cantidad = solucion["cantidadReg"](archivo)
+    asientos = solucion["iniMatriz"](cantidad)
+    solucion["obtenerRegistros"](archivo, asientos)
+    archivo.seek(0)
+    solucion["mostrarAsientos"](asientos)
+    fila = validar["validarInt"](input("Ingrese la fila del pasajero (1-4): "))
+    asiento = validar["validarInt"](input("Ingrese el asiento del pasajero (1-4): "))
+    while fila > 4 or asiento > 4:
+        print("ERROR: Selección fuera de rango")
+        fila = validar["validarInt"](input("Ingrese la fila: "))
+        asiento = validar["validarInt"](input("Ingrese el asiento: "))
+    while asientos[fila - 1][asiento] != "VF":
+        print("ERROR: Asiento sin vender! Seleccione otro")
+        fila = validar["validarInt"](input("Ingrese la fila: "))
+        asiento = validar["validarInt"](input("Ingrese el asiento: "))
+        while fila > 4 or asiento > 4:
+            print("ERROR: Selección fuera de rango")
+            fila = validar["validarInt"](input("Ingrese la fila: "))
+            asiento = validar["validarInt"](input("Ingrese el asiento: "))
+    if avion == "Estados Unidos":
+        archivo = validar["escribirArchivo"]("avionEU.bin")
+    elif avion == "Venezuela":
+        archivo = validar["escribirArchivo"]("avionVE.bin")
+    elif avion == "México":
+        archivo = validar["escribirArchivo"]("avionME.bin")
+    elif avion == "Colombia":
+        archivo = validar["escribirArchivo"]("avionCO.bin")
+    for i in range(len(asientos)):
+        archivo.write("{}".format(asientos[i][0]).encode("utf-8"))
+        for j in range(1, len(asientos[i])):
+            if (i + 1) == fila and j == asiento:
+                archivo.write("#0{}".format(j).encode("utf-8"))
+            else:
+                archivo.write("#{}".format(asientos[i][j]).strip().encode("utf-8"))
+        archivo.write("\n".encode("utf-8"))
+    print("--- DEVOLUCIÓN FINALIZADA ---")
+    if avion == "Estados Unidos":
+        print("Dinero devuelto: {:.2f} $".format(float(rutas[0][1])))
+    elif avion == "Venezuela":
+        print("Dinero devuelto: {:.2f} $".format(float(rutas[1][1])))
+    elif avion == "México":
+        print("Dinero devuelto: {:.2f} $".format(float(rutas[2][1])))
+    elif avion == "Colombia":
+        print("Dinero devuelto: {:.2f} $".format(float(rutas[3][1])))
 
 
 solucion = diccionario()

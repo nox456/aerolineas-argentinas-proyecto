@@ -8,7 +8,7 @@ def diccionario():
         "agregarArchivo": agregarArchivo,
         "validarInt": validarInt,
         "validarFloat": validarFloat,
-        "escribirArchivo": escribirArchivo
+        "escribirArchivo": escribirArchivo,
     }
 
 
@@ -42,6 +42,7 @@ def agregarArchivo(ruta):  # void
         print("Objet-File: Archivo no encontrado. ")
         return None
 
+
 def escribirArchivo(nombre):  # void
     archivo = object
     try:
@@ -50,6 +51,7 @@ def escribirArchivo(nombre):  # void
     except FileNotFoundError:
         print("Objet-File: Archivo no encontrado. ")
         return None
+
 
 def validarInt(n):  # float
     valor = 0  # int

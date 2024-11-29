@@ -30,10 +30,10 @@ def validarOpcion(n):  # int
             n = input("Ingrese un valor correcto")
 
 
-def leerArchivo(nombre):  # object archivo
+def leerArchivo(ruta):  # object archivo
     archivo = object
     try:
-        archivo = open("recursos_humanos/" + nombre, "rb")
+        archivo = open(ruta, "rb")
         return archivo
     except FileNotFoundError:
         print("Objet-File: Archivo no encontrado. ")
