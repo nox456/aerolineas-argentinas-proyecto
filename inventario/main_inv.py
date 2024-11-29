@@ -29,11 +29,10 @@ def menuInventario():  # void
         solucion["obtenerRegistros"](archivo, articulos)
         solucion["listar"](articulos)
     elif opcion == 2:
-        print("FALTA IMPLEMENTACIÓN DE AGREGAR UN REGISTRO AL MÓDULO DE PAGOS")
-        # archivo = validar["agregarArchivo"]("pagos/pagos.bin")
-        # if archivo == None:
-        #     return
-        # solucion["agregar"](archivo)
+        archivo = validar["agregarArchivo"]("pagos/pagos.bin")
+        if archivo == None:
+            return
+        solucion["registrarPago"](archivo)
         archivo.close()
     elif opcion == 3:
         archivo = validar["leerArchivo"]("rutas.bin")

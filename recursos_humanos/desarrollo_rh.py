@@ -10,6 +10,9 @@ def diccionario():
         "iniMatriz": iniMatriz,
         "obtenerRegistros": obtenerRegistros,
         "nomina": nomina,
+        "generarArchivoRenuncia": generarArchivoRenuncia,
+        "generarArchivoDespido": generarArchivoDespido,
+        "eliminarRegistro": eliminarRegistro
     }
 
 
@@ -169,12 +172,6 @@ def liquidacion():  # void
     funciones = {"Renuncia": calculosRenuncia, "Despido": calculosDespido}
     archivos = {"Renuncia": generarArchivoRenuncia, "Despido": generarArchivoDespido}
 
-    print("\n\tMotivos de Liquidación\t\n1) Renuncia\n2) Despido\n3) Salir ")
-    opcion = validar["validarOpcionDict"](input("Ingrese una opción: "), funciones)
-    if opcion == len(funciones) + 1:
-        return
-    motivo = motivos[opcion]
-
     nombre = validar["manejoNombre"](input("Ingrese el nombre del empleado: ")).title()
     apellido = validar["manejoNombre"](
         input("Ingrese el apellido del empleado: ")
@@ -182,6 +179,12 @@ def liquidacion():  # void
     posicion = buscar(archivo, nombre, apellido)
     if posicion == None:
         return
+
+    print("\n\tMotivos de Liquidación\t\n1) Renuncia\n2) Despido\n3) Salir ")
+    opcion = validar["validarOpcionDict"](input("Ingrese una opción: "), funciones)
+    if opcion == len(funciones) + 1:
+        return
+    motivo = motivos[opcion]
 
     fila_columna = determinarTamaño(archivo)
     datos = iniTextoBinario(fila_columna[1])
@@ -209,10 +212,8 @@ def liquidacion():  # void
         fecha_actual[1],
         sueldo_basico,
     )
-    archivos[motivo](datos, calculos, fecha_actual, dias_antiguedad)
-    # registrarPago(nombre, apellido, calculos[-1], calculos[5:8], "pagos/pagos.bin")
-    eliminarRegistro(nombre, apellido)
-    print("¡Liquidación Exitosa!")
+    registrarPago(datos, calculos, fecha_actual, dias_antiguedad,motivo,"pagos/pagos.bin")
+    print("¡Liquidación registrada en el módulo de pagos!")
     return
 
 
@@ -279,15 +280,15 @@ Entregado por: Aerolineas Argentina        Recibido por: {0} {1}
                 int(datos[9]),
                 (dias_antiguedad / 365),
                 float(datos[6]),
-                calculos[3],
-                calculos[4],
-                calculos[1],
-                calculos[5],
-                calculos[6],
-                calculos[7],
-                calculos[2],
-                calculos[8],
-                calculos[9],
+                float(calculos[3]),
+                float(calculos[4]),
+                float(calculos[1]),
+                float(calculos[5]),
+                float(calculos[6]),
+                float(calculos[7]),
+                float(calculos[2]),
+                float(calculos[8]),
+                float(calculos[9]),
             )
         )
 
@@ -363,18 +364,18 @@ Entregado por: Aerolineas Argentina        Recibido por: {0} {1}
                 int(datos[9]),
                 (dias_antiguedad / 365),
                 float(datos[6]),
-                calculos[3],
-                calculos[4],
-                calculos[1],
-                calculos[5],
-                calculos[6],
-                calculos[7],
-                calculos[2],
-                calculos[8],
-                calculos[9],
-                calculos[10],
-                calculos[11],
-                calculos[12],
+                float(calculos[3]),
+                float(calculos[4]),
+                float(calculos[1]),
+                float(calculos[5]),
+                float(calculos[6]),
+                float(calculos[7]),
+                float(calculos[2]),
+                float(calculos[8]),
+                float(calculos[9]),
+                float(calculos[10]),
+                float(calculos[11]),
+                float(calculos[12]),
             )
         )
 
@@ -507,43 +508,30 @@ def calculosDespido(
         return calculos
 
 
-def registrarPago(nombre, apellido, total, impuestos, ruta):  # void
+def registrarPago(datos, calculos, fecha_actual, dias_antiguedad, motivo, ruta):  # void
     archivo = object  # objeto
+    totalPago = 0.0  # float
+    total = calculos[-1]
+    impuestos = calculos[5:8]
     archivo = validar["agregarArchivo"](ruta)
 
     if archivo == None:
         print("Object file -- does not exist")
         return
-
-    if (
-        validar["validarNombre"](nombre)
-        and validar["validarNombre"](apellido)
-        and total >= 0
-        and len(impuestos) > 0
-    ):
-        archivo.write(
-            "Pago Liquidación de {} {}#{:.2f}\n".format(nombre, apellido, total).encode(
-                "utf-8"
-            )
-        )
-        archivo.write(
-            "Aporte jubilatorio por liquidación#{:.3f}\n".format(impuestos[0]).encode(
-                "utf-8"
-            )
-        )
-        archivo.write(
-            "Aporte Obra Social (PAMI) por liquidación#{:.3f}\n".format(
-                impuestos[1]
-            ).encode("utf-8")
-        )
-        archivo.write(
-            "Aporte Obra Social por liquidación#{:.3f}\n".format(impuestos[2]).encode(
-                "utf-8"
-            )
-        )
-        archivo.close()
-        return
-    return
+    totalPago = total + impuestos[0] + impuestos[1] + impuestos[2]
+    if motivo == "Despido":
+        archivo.write("Liq. Despido#".encode("utf-8"))
+    else:
+        archivo.write("Liq. Renuncia#".encode("utf-8"))
+    for i in range(len(datos)):
+        archivo.write("{}-".format(datos[i].strip()).encode("utf-8"))
+    for i in range(len(fecha_actual)):
+        archivo.write("{}-".format(fecha_actual[i]).encode("utf-8"))
+    archivo.write("{}-".format(dias_antiguedad / 365).encode("utf-8"))
+    for i in range(len(calculos)):
+        archivo.write("{}-".format(calculos[i]).encode("utf-8"))
+    archivo.write("#{:.2f}#No Pagado\n".format(totalPago).encode("utf-8"))
+    archivo.close()
 
 
 def vacaciones(años_antiguedad):  # int
@@ -719,10 +707,16 @@ def nomina(archivo, empleados):
             + imp_gan
         )
         salario_neto = salario - deducciones
-        nomina_archivo = validar["crearArchivo"]("Nomina-{0}-{1}".format(nombre, apellido))
-        nomina_archivo.write("---------------------------------------------------------------\n")
+        nomina_archivo = validar["crearArchivo"](
+            "Nomina-{0}-{1}".format(nombre, apellido)
+        )
+        nomina_archivo.write(
+            "---------------------------------------------------------------\n"
+        )
         nomina_archivo.write("                            Nomina                   \n")
-        nomina_archivo.write("---------------------------------------------------------------\n")
+        nomina_archivo.write(
+            "---------------------------------------------------------------\n"
+        )
         nomina_archivo.write(
             "Nombre: {0}                                 \n".format(nombre)
         )
@@ -730,7 +724,9 @@ def nomina(archivo, empleados):
             "Apellido: {0}                               \n".format(apellido)
         )
         nomina_archivo.write("                          Deducciones                 \n")
-        nomina_archivo.write("---------------------------------------------------------------\n")
+        nomina_archivo.write(
+            "---------------------------------------------------------------\n"
+        )
         nomina_archivo.write(
             "Aportes Jubilatorios: {0} %                 \n".format(ap_jub)
         )
@@ -743,13 +739,17 @@ def nomina(archivo, empleados):
         nomina_archivo.write(
             "Impuesto a las ganancias: {0} $             \n".format(imp_gan)
         )
-        nomina_archivo.write("---------------------------------------------------------------\n")
+        nomina_archivo.write(
+            "---------------------------------------------------------------\n"
+        )
         nomina_archivo.write(
             "Salario Base: {0} $         Salario Neto: {1} $ \n".format(
                 salario, salario_neto
             )
         )
-        nomina_archivo.write("---------------------------------------------------------------\n")
+        nomina_archivo.write(
+            "---------------------------------------------------------------\n"
+        )
         nomina_archivo.close()
         print("¡Nómina Creada!")
 
