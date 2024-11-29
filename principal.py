@@ -10,12 +10,11 @@ def main():
         solucion["menuRecursosHumanos"]()
     elif opcion == 2:
         solucion["menuPagos"]()
-    # IMPLEMENTACIÓN DEL MÓDULO DE VENTAS
-    # elif opcion == 3:
-    #     solucion["menuVentas"]()
     elif opcion == 3:
-        solucion["menuInventario"]()
+        solucion["menuVentas"]()
     elif opcion == 4:
+        solucion["menuInventario"]()
+    elif opcion == 5:
         print("GRACIAS POR USAR EL SOFTWARE!")
     else:
         print("ERROR: Opción no válida!")

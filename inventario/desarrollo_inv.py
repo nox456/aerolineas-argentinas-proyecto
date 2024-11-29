@@ -13,6 +13,7 @@ def diccionario():
         "obtenerPrecio": obtenerPrecio,
         "obtenerAsientoVuelo": obtenerAsientoVuelo,
         "agregar": agregar,
+        "boletoVendido": boletoVendido,
     }
 
 
@@ -140,7 +141,7 @@ def registrarVenta(archivo, asiento, ruta, precio):  # void
     if archivo != None:
         archivo.write(
             "Boleto#{0}-{1}-{2}#{3:.2f}#No Vendido\n".format(
-                ruta, asiento[0], asiento[1], precio
+                ruta, asiento[0], asiento[1].strip(), precio
             ).encode("utf-8")
         )
         print("\n---BOLETO AGREGADO A LA LISTA DE VENTAS---")
@@ -151,6 +152,28 @@ def agregar(nombre, cantidad):  # void
     archivo = validar["agregarArchivo"]("inventario/articulos.bin")
     if cantidad > 0 and archivo != None:
         archivo.write("{0}#{1}\n".format(nombre, cantidad).encode("utf-8"))
+        archivo.close()
+
+
+def boletoVendido(fila, asiento):  # void
+    archivo = object
+    cantidad = []  # arreglo uni int
+    asientos = []  # arreglo bi string
+    archivo = validar["leerArchivo"]("avion.bin")
+    cantidad = solucion["cantidadReg"](archivo)
+    asientos = solucion["iniMatriz"](cantidad)
+    solucion["obtenerRegistros"](archivo, asientos)
+    archivo.close()
+    archivo = validar["escribirArchivo"]("avion.bin")
+    if archivo != None:
+        for i in range(len(asientos)):
+            archivo.write("{0}".format(asientos[i][0]).encode("utf-8"))
+            for j in range(1, len(asientos[i])):
+                if asientos[i][j].strip() == asiento and asientos[i][0] == fila:
+                    archivo.write("#VF".encode("utf-8"))
+                else:
+                    archivo.write("#{0}".format(asientos[i][j].strip()).encode("utf-8"))
+            archivo.write("\n".encode("utf-8"))
         archivo.close()
 
 
