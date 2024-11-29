@@ -42,7 +42,7 @@ def agregarArchivo(ruta):  # void
         return None
 
 
-def validarInt(n): # float
+def validarInt(n):  # float
     valor = 0  # int
     while True:
         try:
@@ -57,7 +57,7 @@ def validarInt(n): # float
             n = input("Ingrese el valor correcto: ")
 
 
-def validarFloat(n): # float
+def validarFloat(n):  # float
     valor = 0.0  # float
     while True:
         try:

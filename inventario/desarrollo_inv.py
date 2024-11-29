@@ -12,6 +12,7 @@ def diccionario():
         "obtenerRuta": obtenerRuta,
         "obtenerPrecio": obtenerPrecio,
         "obtenerAsientoVuelo": obtenerAsientoVuelo,
+        "agregar": agregar,
     }
 
 
@@ -49,13 +50,9 @@ def listar(articulos):  # void
     if len(articulos) > 0:
         print("\n-LISTA DE ARTÍCULOS")
         print("------------------------------------")
-        print("{0:12}{1:3}  {2:6}".format("Nombre", "Cantidad", "Precio Total"))
+        print("{0:12}{1:3}".format("Nombre", "Cantidad"))
         for linea in articulos:
-            print(
-                "{0:15}{1:3}     {2:.2f} $".format(
-                    linea[0], int(linea[1]), float(linea[2])
-                )
-            )
+            print("{0:15}{1:3}".format(linea[0], int(linea[1])))
         print("------------------------------------")
 
 
@@ -69,9 +66,9 @@ def registrarPago(archivo):  # void
         precio = validar["validarFloat"](input("Ingrese el precio: "))
         cantidad = validar["validarInt"](input("Ingrese la cantidad: "))
         archivo.write(
-            "Artículo#{0}#{1}#No Pagado\n".format(nombre, cantidad * precio).encode(
-                "utf-8"
-            )
+            "Artículo#{0}-{1}#{2}#No Pagado\n".format(
+                nombre, cantidad, cantidad * precio
+            ).encode("utf-8")
         )
         print("\n---ARTÍCULO AGREGADO A LA LISTA DE PAGOS---")
 
@@ -147,6 +144,14 @@ def registrarVenta(archivo, asiento, ruta, precio):  # void
             ).encode("utf-8")
         )
         print("\n---BOLETO AGREGADO A LA LISTA DE VENTAS---")
+
+
+def agregar(nombre, cantidad):  # void
+    archivo = object
+    archivo = validar["agregarArchivo"]("inventario/articulos.bin")
+    if cantidad > 0 and archivo != None:
+        archivo.write("{0}#{1}\n".format(nombre, cantidad).encode("utf-8"))
+        archivo.close()
 
 
 solucion = diccionario()

@@ -1,5 +1,6 @@
 from .utilitarias_pg import validar
 from recursos_humanos.desarrollo_rh import solucion as solucion_rh
+from inventario.desarrollo_inv import solucion as solucion_inv
 
 
 def diccionario():
@@ -67,7 +68,7 @@ def listar(pagos):  # void
             else:
                 print(
                     "{0:15} {1:15} {2:12.2f} $ {3:5}".format(
-                        linea[0], linea[1], float(linea[2]), linea[3]
+                        linea[0], linea[1].split("-")[0], float(linea[2]), linea[3]
                     ),
                     end="",
                 )
@@ -88,6 +89,8 @@ def pagar(noPagados, pagos):  # void
     abono = 0.0  # float
     restante = 0.0  # float
     nombre = ""  # string
+    articulo = ""  # string
+    cantidad = 0  # int
     tipo = ""  # string
     datos = []  # arreglo uni string
     calculos = []  # arreglo uni float
@@ -110,7 +113,10 @@ def pagar(noPagados, pagos):  # void
             else:
                 print(
                     "{0}. {1} - {2} - {3:.2f} $".format(
-                        n, noPagados[i][0], noPagados[i][1], float(noPagados[i][2])
+                        n,
+                        noPagados[i][0],
+                        noPagados[i][1].split("-")[0],
+                        float(noPagados[i][2]),
                     )
                 )
 
@@ -130,9 +136,9 @@ def pagar(noPagados, pagos):  # void
             for i in range(len(pagos)):
                 if pagos[i][1] == nombre:
                     archivo.write(
-                        "{0}#{1}#{2}#No Pagado\n".format(pagos[i][0], nombre, restante).encode(
-                            "utf-8"
-                        )
+                        "{0}#{1}#{2}#No Pagado\n".format(
+                            pagos[i][0], nombre, restante
+                        ).encode("utf-8")
                     )
                 else:
                     archivo.write(
@@ -148,17 +154,22 @@ def pagar(noPagados, pagos):  # void
             for i in range(len(pagos)):
                 if pagos[i][1] == nombre:
                     archivo.write(
-                        "{0}#{1}#{2}#Pagado\n".format(pagos[i][0],nombre, 0).encode("utf-8")
+                        "{0}#{1}#{2}#Pagado\n".format(pagos[i][0], nombre, 0).encode(
+                            "utf-8"
+                        )
                     )
                 else:
                     archivo.write(
                         "{0}#{1}#{2}#{3}\n".format(
-                            pagos[i][0],pagos[i][1], pagos[i][2], pagos[i][3].strip()
+                            pagos[i][0], pagos[i][1], pagos[i][2], pagos[i][3].strip()
                         ).encode("utf-8")
                     )
             print("--- ABONO REALIZADO ---")
             if tipo == "Artículo":
-                print("--- ARTÍCULO PAGADO ---")
+                articulo = nombre.split("-")[0]
+                cantidad = int(nombre.split("-")[1])
+                solucion_inv["agregar"](articulo, cantidad)
+                print("--- ARTÍCULO PAGADO Y AGREGADO AL INVENTARIO ---")
             elif tipo == "Liq. Despido":
                 datos = nombre.split("-")[0:10]
                 fecha_actual = nombre.split("-")[10:13]
@@ -188,17 +199,22 @@ def pagar(noPagados, pagos):  # void
             for i in range(len(pagos)):
                 if pagos[i][1] == nombre:
                     archivo.write(
-                        "{0}#{1}#{2}#Pagado\n".format(pagos[i][0],nombre, 0).encode("utf-8")
+                        "{0}#{1}#{2}#Pagado\n".format(pagos[i][0], nombre, 0).encode(
+                            "utf-8"
+                        )
                     )
                 else:
                     archivo.write(
                         "{0}#{1}#{2}#{3}\n".format(
-                            pagos[i][0],pagos[i][1], pagos[i][2], pagos[i][3].strip()
+                            pagos[i][0], pagos[i][1], pagos[i][2], pagos[i][3].strip()
                         ).encode("utf-8")
                     )
             print("--- ABONO REALIZADO ---")
             if tipo == "Artículo":
-                print("--- ARTÍCULO PAGADO ---")
+                articulo = nombre.split("-")[0]
+                cantidad = int(nombre.split("-")[1])
+                solucion_inv["agregar"](articulo, cantidad)
+                print("--- ARTÍCULO PAGADO Y AGREGADO AL INVENTARIO ---")
             elif tipo == "Liq. Despido":
                 datos = nombre.split("-")[0:10]
                 fecha_actual = nombre.split("-")[10:13]
