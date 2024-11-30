@@ -250,7 +250,7 @@ def devolverDineroTodo(avion, rutas):  # float
     return monto_final
 
 
-def devolverAsientos(avion):
+def devolverAsientos(avion): # arreglo uni str
     f = 0  # int
     c = 0  # int
     archivo = object
@@ -272,14 +272,16 @@ def devolverAsientos(avion):
             archivo.write("\n".encode("utf-8"))
 
         archivo.close()
+    print("--- ASIENTOS LIBERADOS ---")
 
 
-def devolverDinero(avion):  # void
+def devolverDinero(avion):  # str
     fila = 0  # int
     asiento = 0  # int
     asientos = []  # arreglo bi str
     cantidad = []  # arreglo uni int
-    rutas = [] # arreglo uni str
+    rutas = []  # arreglo uni str
+    monto = 0.0  # flaot
     archivo = object
     archivo = validar["leerArchivo"]("rutas.bin")
     cantidad = solucion["cantidadReg"](archivo)
@@ -304,7 +306,7 @@ def devolverDinero(avion):  # void
         print("ERROR: Selección fuera de rango")
         fila = validar["validarInt"](input("Ingrese la fila: "))
         asiento = validar["validarInt"](input("Ingrese el asiento: "))
-    while asientos[fila - 1][asiento] != "VF":
+    while asientos[fila - 1][asiento].strip() != "VF":
         print("ERROR: Asiento sin vender! Seleccione otro")
         fila = validar["validarInt"](input("Ingrese la fila: "))
         asiento = validar["validarInt"](input("Ingrese el asiento: "))
@@ -328,15 +330,18 @@ def devolverDinero(avion):  # void
             else:
                 archivo.write("#{}".format(asientos[i][j]).strip().encode("utf-8"))
         archivo.write("\n".encode("utf-8"))
-    print("--- DEVOLUCIÓN FINALIZADA ---")
     if avion == "Estados Unidos":
-        print("Dinero devuelto: {:.2f} $".format(float(rutas[0][1])))
+        monto = float(rutas[0][1])
     elif avion == "Venezuela":
-        print("Dinero devuelto: {:.2f} $".format(float(rutas[1][1])))
+        monto = float(rutas[1][1])
     elif avion == "México":
-        print("Dinero devuelto: {:.2f} $".format(float(rutas[2][1])))
+        monto = float(rutas[2][1])
     elif avion == "Colombia":
-        print("Dinero devuelto: {:.2f} $".format(float(rutas[3][1])))
+        monto = float(rutas[3][1])
+    print("--- ASIENTOS LIBERADOS ---")
+    print("--- DEVOLUCIÓN FINALIZADA ---")
+    print("Dinero devuelto: {:.2f} $".format(monto))
+    return "{0}-{1}-0{2}".format(avion, asientos[fila - 1][0], asiento)
 
 
 solucion = diccionario()

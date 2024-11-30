@@ -11,6 +11,8 @@ def diccionario():
         "listar": listar,
         "registrosNoVendidos": registrosNoVendidos,
         "vender": vender,
+        "eliminarRegistroAsiento": eliminarRegistroAsiento,
+        "eliminarRegistroAvion": eliminarRegistroAvion
     }
 
 
@@ -65,7 +67,10 @@ def listar(ventas):  # void
             elif linea[0] == "Nomina":
                 print(
                     "{0:10} {1:25} {2:10.2f} $ {3:8}".format(
-                        linea[0], "-".join(linea[1].split("-")[0:2]), float(linea[2]), linea[3]
+                        linea[0],
+                        "-".join(linea[1].split("-")[0:2]),
+                        float(linea[2]),
+                        linea[3],
                     )
                 )
         print("----------------------------------------------------------------")
@@ -97,7 +102,10 @@ def vender(noVendidos, ventas):  # void
             elif noVendidos[i][0] == "Nomina":
                 print(
                     "{0}. {1} - {2} - {3:.2f} $".format(
-                        n, noVendidos[i][0], "-".join(noVendidos[i][1].split("-")[0:2]), float(noVendidos[i][2])
+                        n,
+                        noVendidos[i][0],
+                        "-".join(noVendidos[i][1].split("-")[0:2]),
+                        float(noVendidos[i][2]),
                     )
                 )
 
@@ -152,7 +160,9 @@ def vender(noVendidos, ventas):  # void
                     )
             print("--- ABONO REALIZADO ---")
             if tipo == "Boleto":
-                solucion_inv["boletoVendido"](nombre.split("-")[0],nombre.split("-")[1], nombre.split("-")[2])
+                solucion_inv["boletoVendido"](
+                    nombre.split("-")[0], nombre.split("-")[1], nombre.split("-")[2]
+                )
                 print("--- BOLETO VENDIDO ---")
             elif tipo == "Nomina":
                 print("--- NOMINA CREADA ---")
@@ -177,11 +187,55 @@ def vender(noVendidos, ventas):  # void
                     )
             print("--- ABONO REALIZADO ---")
             if tipo == "Boleto":
-                solucion_inv["boletoVendido"](nombre.split("-")[0],nombre.split("-")[1], nombre.split("-")[2])
+                solucion_inv["boletoVendido"](
+                    nombre.split("-")[0], nombre.split("-")[1], nombre.split("-")[2]
+                )
                 print("--- BOLETO VENDIDO ---")
             elif tipo == "Nomina":
                 print("--- NOMINA CREADA ---")
                 solucion_rh["crearNomina"](nombre.split("-"))
+
+
+def eliminarRegistroAsiento(nombre):  # void
+    archivo = object
+    cantidad = []  # arreglo uni int
+    ventas = []  # arreglo uni str
+    archivo = validar["leerArchivo"]("ventas.bin")
+    if archivo == None:
+        return
+    cantidad = solucion["cantidadReg"](archivo)
+    ventas = solucion["iniMatriz"](cantidad)
+    solucion["obtenerRegistros"](archivo, ventas)
+    archivo = validar["escribirArchivo"]("ventas.bin")
+    for i in range(len(ventas)):
+        if ventas[i][1] != nombre:
+            archivo.write(
+                "{0}#{1}#{2}#{3}".format(
+                    ventas[i][0], ventas[i][1], ventas[i][2], ventas[i][3]
+                ).encode("utf-8")
+            )
+    print("--- VENTAS CANCELADAS ---")
+
+
+def eliminarRegistroAvion(avion):  # void
+    archivo = object
+    cantidad = []  # arreglo uni int
+    ventas = []  # arreglo uni str
+    archivo = validar["leerArchivo"]("ventas.bin")
+    if archivo == None:
+        return
+    cantidad = solucion["cantidadReg"](archivo)
+    ventas = solucion["iniMatriz"](cantidad)
+    solucion["obtenerRegistros"](archivo, ventas)
+    archivo = validar["escribirArchivo"]("ventas.bin")
+    for i in range(len(ventas)):
+        if ventas[i][1].split("-")[0] != avion:
+            archivo.write(
+                "{0}#{1}#{2}#{3}".format(
+                    ventas[i][0], ventas[i][1], ventas[i][2], ventas[i][3]
+                ).encode("utf-8")
+            )
+    print("--- VENTAS CANCELADAS ---")
 
 
 solucion = diccionario()

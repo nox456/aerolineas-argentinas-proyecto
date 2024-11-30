@@ -1,6 +1,7 @@
 from .utilitarias_rh import validar
 from .desarrollo_rh import solucion
 from inventario.desarrollo_inv import solucion as solucion_inv
+from ventas.desarrollo_vt import solucion as solucion_vt
 
 
 def menuRecursosHumanos():  # void
@@ -11,8 +12,8 @@ def menuRecursosHumanos():  # void
     roles = []  # arreglo bi str
     rutas = []  # arreglo bi str
     razon = ""  # string
-    monto = 0.0 # float
-    asiento = [] # arreglo uni str
+    monto = 0.0  # float
+    venta = ""  # str
     print("\n**** RECURSOS HUMANOS ****\n")
     print("1. Listar empleados")
     print("2. Agregar empleado al registro")
@@ -70,10 +71,12 @@ def menuRecursosHumanos():  # void
         if razon == "Avion":
             monto = solucion_inv["devolverDineroTodo"](avion, rutas)
             solucion_inv["devolverAsientos"](avion)
+            solucion_vt["eliminarRegistroAvion"](avion)
             print("--- DEVOLUCIÓN FINALIZADA ---")
             print("Dinero devuelto: {:.2f} $".format(monto))
         elif razon == "Pasajero":
-            solucion_inv["devolverDinero"](avion)
+            venta = solucion_inv["devolverDinero"](avion)
+            solucion_vt["eliminarRegistro"](venta)
     elif opcion == 6:
         print("GRACIAS POR USAR EL SOFTWARE!")
     else:
