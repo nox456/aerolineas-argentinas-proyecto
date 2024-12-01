@@ -9,7 +9,10 @@ def diccionario():
         "validarFloat": validarFloat,
         "escribirArchivo": escribirArchivo,
         "validarNombre": validarNombre,
-        "manejoNombre": manejoNombre
+        "manejoNombre": manejoNombre,
+        "validarDia": validarDia,
+        "validarMes": validarMes,
+        "validarAno": validarAno,
     }
 
 
@@ -118,6 +121,30 @@ def manejoNombre(nombre):
             nombre = input("Ingrese un nombre o apellido válido: ")
         else:
             return nombre
+
+
+def validarDia(dia):  # int
+    while True:
+        dia = validarInt(dia)
+        if 1 <= dia <= 31:
+            return dia
+        dia = input("Ingrese un día válido: ")
+
+
+def validarMes(mes):  # int
+    while True:
+        mes = validarInt(mes)
+        if 1 <= mes <= 12:
+            return mes
+        mes = input("Ingrese un mes válido: ")
+
+
+def validarAno(ano):  # int
+    while True:
+        ano = validarInt(ano)
+        if ano >= 1950:
+            return ano
+        ano = input("Ingrese un año válido: ")
 
 
 validar = diccionario()

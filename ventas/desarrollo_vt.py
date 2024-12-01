@@ -13,6 +13,9 @@ def diccionario():
         "vender": vender,
         "eliminarRegistroAsiento": eliminarRegistroAsiento,
         "eliminarRegistroAvion": eliminarRegistroAvion,
+        "registrosVencidos": registrosVencidos,
+        "mostrarVencidos": mostrarVencidos,
+        "renovarVenta": renovarVenta
     }
 
 
@@ -48,7 +51,16 @@ def obtenerRegistros(archivo, matriz):  # void
 
 
 def listar(ventas):  # void
+    dia = 0  # int
+    mes = 0  # int
+    ano = 0  # int
+    fecha_vencimiento = []  # arreglo uni str
+    diasDif = 0  # int
+    estado = ""  # str
     if len(ventas) > 0:
+        dia = validar["validarDia"](input("Ingrese el dia actual: "))
+        mes = validar["validarMes"](input("Ingrese el mes actual: "))
+        ano = validar["validarAno"](input("Ingrese el año actual: "))
         print("\n-LISTA DE VENTAS")
         print("----------------------------------------------------------------")
         print(
@@ -58,12 +70,30 @@ def listar(ventas):  # void
         )
         for linea in ventas:
             if linea[0] == "Boleto":
+                fecha_vencimiento = linea[1].split("-")[3:6]
+            else:
+                fecha_vencimiento = linea[1].split("-")[8:11]
+            diasDif = ventaVencido(
+                dia,
+                mes,
+                ano,
+                int(fecha_vencimiento[0]),
+                int(fecha_vencimiento[1]),
+                int(fecha_vencimiento[2]),
+            )
+            if diasDif >= 7 and (
+                linea[3] == "No Vendido\n" or linea[3] == "No Vendido"
+            ):
+                estado = "Vencida\n"
+            else:
+                estado = linea[3]
+            if linea[0] == "Boleto":
                 print(
                     "{0:10} {1:25} {2:10.2f} $ {3:8}".format(
                         linea[0],
                         "-".join(linea[1].split("-")[0:3]),
                         float(linea[2]),
-                        linea[3],
+                        estado,
                     ),
                     end="",
                 )
@@ -73,8 +103,8 @@ def listar(ventas):  # void
                         linea[0],
                         "-".join(linea[1].split("-")[0:2]),
                         float(linea[2]),
-                        linea[3],
-                    )
+                        estado.strip(),
+                    ),
                 )
         print("----------------------------------------------------------------")
 
@@ -95,7 +125,10 @@ def mostrarNoVendidos(noVendidos):  # int
             if noVendidos[i][0] == "Boleto":
                 print(
                     "{0}. {1} - {2} - {3:.2f} $".format(
-                        n, noVendidos[i][0], "-".join(noVendidos[i][1].split("-")[0:3]), float(noVendidos[i][2])
+                        n,
+                        noVendidos[i][0],
+                        "-".join(noVendidos[i][1].split("-")[0:3]),
+                        float(noVendidos[i][2]),
                     )
                 )
             elif noVendidos[i][0] == "Nomina":
@@ -115,7 +148,11 @@ def vender(noVendidos, ventas):  # void
     n = 0  # int
     monto = 0.0  # float
     abono = 0.0  # float
-    restante = 0.0  # float
+    dia = 0  # int
+    mes = 0  # int
+    ano = 0  # int
+    difFecha = 0  # int
+    fecha = []  # arreglo uni string
     if len(noVendidos) > 0 and len(ventas) > 0:
         n = mostrarNoVendidos(noVendidos)
         reg = validar["validarInt"](input("Ingrese el registro (1-" + str(n) + "): "))
@@ -127,37 +164,35 @@ def vender(noVendidos, ventas):  # void
         monto = float(noVendidos[reg - 1][2])
         nombre = noVendidos[reg - 1][1]
         tipo = noVendidos[reg - 1][0]
-        abono = validar["validarFloat"](input("Ingrese el abono: "))
-        archivo = validar["escribirArchivo"]("ventas.bin")
-        if abono < monto:
-            restante = monto - abono
-            restarPrecio(ventas, restante, nombre, archivo)
-            print("--- ABONO REALIZADO ---")
-            print("Falta: " + str(restante) + " $")
-        elif abono > monto:
-            restante = abono - monto
-            marcarVendido(ventas, nombre, archivo)
-            print("--- ABONO REALIZADO ---")
-            if tipo == "Boleto":
-                solucion_inv["boletoVendido"](
-                    nombre.split("-")[0], nombre.split("-")[1], nombre.split("-")[2]
-                )
-                print("--- BOLETO VENDIDO ---")
-            elif tipo == "Nomina":
-                print("--- NOMINA CREADA ---")
-                solucion_rh["crearNomina"](nombre.split("-"))
-            print("Devolución al usuario: " + str(restante) + " $")
+        dia = validar["validarDia"](input("Ingrese el dia: "))
+        mes = validar["validarMes"](input("Ingrese el mes: "))
+        ano = validar["validarAno"](input("Ingrese el año: "))
+        if tipo == "Boleto":
+            difFecha = ventaVencido(
+                dia,
+                mes,
+                ano,
+                int(nombre.split("-")[3]),
+                int(nombre.split("-")[4]),
+                int(nombre.split("-")[5]),
+            )
         else:
-            marcarVendido(ventas, nombre, archivo)
-            print("--- ABONO REALIZADO ---")
-            if tipo == "Boleto":
-                solucion_inv["boletoVendido"](
-                    nombre.split("-")[0], nombre.split("-")[1], nombre.split("-")[2]
-                )
-                print("--- BOLETO VENDIDO ---")
-            elif tipo == "Nomina":
-                print("--- NOMINA CREADA ---")
-                solucion_rh["crearNomina"](nombre.split("-"))
+            difFecha = ventaVencido(
+                dia,
+                mes,
+                ano,
+                int(nombre.split("-")[8]),
+                int(nombre.split("-")[9]),
+                int(nombre.split("-")[10]),
+            )
+        if difFecha >= 7:
+            print(
+                "AVISO: El registro que desea pagar está vencido! Por favor renueve el pago"
+            )
+        else:
+            abono = validar["validarFloat"](input("Ingrese el abono: "))
+            archivo = validar["escribirArchivo"]("ventas.bin")
+            comprobarAbono(abono, monto, ventas, nombre, tipo, archivo)
 
 
 def restarPrecio(ventas, restante, nombreRegistro, archivo):  # void
@@ -240,6 +275,160 @@ def eliminarRegistroAvion(avion):  # void
                 ).encode("utf-8")
             )
     print("--- VENTAS CANCELADAS ---")
+
+
+def ventaVencido(dia, mes, ano, diaV, mesV, anoV):  # int
+    diasTotales = 0  # int
+    diasVTotales = 0  # int
+    dias_mes = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+    diasTotales = 365 * (ano - 1) + ano // 4 - ano // 100 + ano // 400
+    for i in range(1, mes):
+        diasTotales += dias_mes[i - 1]
+    diasTotales += dia - 1
+
+    diasVTotales = 365 * (anoV - 1) + anoV // 4 - anoV // 100 + anoV // 400
+    for i in range(1, mesV):
+        diasVTotales += dias_mes[i - 1]
+    diasVTotales += diaV - 1
+    return diasTotales - diasVTotales
+
+
+def comprobarAbono(abono, monto, ventas, nombreRegistro, tipo, archivo):
+    restante = 0.0  # float
+    if abono < monto:
+        restante = monto - abono
+        restarPrecio(ventas, restante, nombreRegistro, archivo)
+        print("--- ABONO REALIZADO ---")
+        print("Falta: " + str(restante) + " $")
+    elif abono > monto:
+        restante = abono - monto
+        marcarVendido(ventas, nombreRegistro, archivo)
+        print("--- ABONO REALIZADO ---")
+        if tipo == "Boleto":
+            solucion_inv["boletoVendido"](
+                nombreRegistro.split("-")[0],
+                nombreRegistro.split("-")[1],
+                nombreRegistro.split("-")[2],
+            )
+            print("--- BOLETO VENDIDO ---")
+        elif tipo == "Nomina":
+            print("--- NOMINA CREADA ---")
+            solucion_rh["crearNomina"](nombreRegistro.split("-"))
+        print("Devolución al usuario: " + str(restante) + " $")
+    else:
+        marcarVendido(ventas, nombreRegistro, archivo)
+        print("--- ABONO REALIZADO ---")
+        if tipo == "Boleto":
+            solucion_inv["boletoVendido"](
+                nombreRegistro.split("-")[0],
+                nombreRegistro.split("-")[1],
+                nombreRegistro.split("-")[2],
+            )
+            print("--- BOLETO VENDIDO ---")
+        elif tipo == "Nomina":
+            print("--- NOMINA CREADA ---")
+            solucion_rh["crearNomina"](nombreRegistro.split("-"))
+
+
+def registrosVencidos(ventas, vencidas):  # arreglo uni int
+    dia = 0  # int
+    mes = 0  # int
+    ano = 0  # int
+    diasDif = 0  # int
+    fecha_vencido = []  # arreglo uni str
+    if len(ventas) > 0 and len(vencidas) == 0:
+        dia = validar["validarDia"](input("Ingrese el dia actual: "))
+        mes = validar["validarMes"](input("Ingrese el mes actual: "))
+        ano = validar["validarAno"](input("Ingrese el año actual: "))
+        print("\n-PAGOS VENCIDOS")
+        for i in range(len(ventas)):
+            if ventas[i][0] == "Boleto":
+                fecha_vencido = ventas[i][1].split("-")[3:6]
+            else:
+                fecha_vencido = ventas[i][1].split("-")[8:11]
+            diasDif = ventaVencido(
+                dia,
+                mes,
+                ano,
+                int(fecha_vencido[0]),
+                int(fecha_vencido[1]),
+                int(fecha_vencido[2]),
+            )
+            if diasDif >= 7 and (
+                ventas[i][3] == "No Vendido\n" or ventas[i][3] == "No Vendido"
+            ):
+                vencidas.append(ventas[i])
+    return [int(dia), int(mes), int(ano)]
+
+
+def mostrarVencidos(vencidas, fecha_actual):
+    n = 0  # int
+    diasDif = 0  # int
+    fecha_vencido = []  # arreglo uni str
+    if len(vencidas) > 0:
+        for i in range(len(vencidas)):
+            n += 1
+            if vencidas[i][0] == "Boleto":
+                fecha_vencido = vencidas[i][1].split("-")[3:6]
+            else:
+                fecha_vencido = vencidas[i][1].split("-")[8:11]
+            diasDif = ventaVencido(
+                fecha_actual[0],
+                fecha_actual[1],
+                fecha_actual[2],
+                int(fecha_vencido[0]),
+                int(fecha_vencido[1]),
+                int(fecha_vencido[2]),
+            )
+            if vencidas[i][0] == "Boleto":
+                print(
+                    "{0}. {1} - {2} - {3:.2f} $ - Vencido hace {4} días".format(
+                        n,
+                        vencidas[i][0],
+                        "-".join(vencidas[i][1].split("-")[0:3]),
+                        float(vencidas[i][2]),
+                        diasDif,
+                    )
+                )
+            else:
+                print(
+                    "{0}. {1} - {2} - {3:.2f} $ - Vencido hace {4} días".format(
+                        n,
+                        vencidas[i][0],
+                        "-".join(vencidas[i][1].split("-")[0:2]),
+                        float(vencidas[i][2]),
+                        diasDif,
+                    )
+                )
+    else:
+        print("-----------------------------")
+        print("No hay registros vencidos...")
+        print("-----------------------------")
+
+
+def renovarVenta(ventas, vencidas, fecha_actual, archivo):
+    n = 0  # int
+    reg = []  # arreglo uni str
+    aux = []  # arreglo uni str
+    if len(vencidas) > 0 and archivo != None:
+        n = validar["validarInt"](
+            input("Ingrese su opción (1-" + str(len(vencidas)) + "): ")
+        )
+        for i in range(len(ventas)):
+            reg = ventas[i]
+            if ventas[i][1] == vencidas[n - 1][1]:
+                aux = reg[1].split("-")
+                if ventas[i][0] == "Boleto":
+                    aux[3] = str(fecha_actual[0])
+                    aux[4] = str(fecha_actual[1])
+                    aux[5] = str(fecha_actual[2])
+                else:
+                    aux[8] = str(fecha_actual[0])
+                    aux[9] = str(fecha_actual[1])
+                    aux[10] = str(fecha_actual[2])
+                reg[1] = "-".join(aux)
+            archivo.write("#".join(reg).encode("utf-8"))
+        print("--- VENTA RENOVADA ---")
 
 
 solucion = diccionario()

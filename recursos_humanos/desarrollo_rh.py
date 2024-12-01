@@ -698,6 +698,9 @@ def nomina(archivo, empleados):
     deducciones = 0.0  # float
     salario = 0.0  # float
     salario_neto = 0.0  # float
+    dia = 0  # int
+    mes = 0  # int
+    ano = 0  # int
     nomina_archivo = object
     ventas_archivo = object
     if archivo != None and len(empleados) > 0:
@@ -720,8 +723,11 @@ def nomina(archivo, empleados):
         )
         salario_neto = salario - deducciones
         ventas_archivo = validar["agregarArchivo"]("ventas/ventas.bin")
+        dia = validar["validarDia"](input("Ingrese el dia actual: "))
+        mes = validar["validarMes"](input("Ingrese el mes actual: "))
+        ano = validar["validarAno"](input("Ingrese el año actual: "))
         ventas_archivo.write(
-            "Nomina#{0}-{1}-{2}-{3}-{4}-{5}-{6}-{7}#{8}#No Vendido".format(
+            "Nomina#{0}-{1}-{2}-{3}-{4}-{5}-{6}-{7}-{8}-{9}-{10}#{11}#No Vendido".format(
                 nombre,
                 apellido,
                 salario,
@@ -730,6 +736,9 @@ def nomina(archivo, empleados):
                 ap_os,
                 ap_sd,
                 imp_gan,
+                dia,
+                mes,
+                ano,
                 deducciones,
             ).encode("utf-8")
         )

@@ -68,7 +68,10 @@ def listar(pagos):  # void
             )
         )
         for linea in pagos:
-            fecha_vencido = linea[1].split("-")[2:5]
+            if linea[0] == "Artículo":
+                fecha_vencido = linea[1].split("-")[2:5]
+            else:
+                fecha_vencido = linea[1].split("-")[10:13]
             diasDif = pagoVencido(
                 dia,
                 mes,
@@ -317,8 +320,12 @@ def registrosVencidos(pagos, vencidos):  # arreglo uni int
         dia = validar["validarDia"](input("Ingrese el dia actual: "))
         mes = validar["validarMes"](input("Ingrese el mes actual: "))
         ano = validar["validarAno"](input("Ingrese el año actual: "))
+        print("\n-PAGOS VENCIDOS")
         for i in range(len(pagos)):
-            fecha_vencido = pagos[i][1].split("-")[2:5]
+            if pagos[i][0] == "Artículo":
+                fecha_vencido = pagos[i][1].split("-")[2:5]
+            else:
+                fecha_vencido = pagos[i][1].split("-")[10:13]
             diasDif = pagoVencido(
                 dia,
                 mes,
@@ -327,8 +334,7 @@ def registrosVencidos(pagos, vencidos):  # arreglo uni int
                 int(fecha_vencido[1]),
                 int(fecha_vencido[2]),
             )
-            print("\n-PAGOS VENCIDOS")
-            if diasDif >= 7:
+            if diasDif >= 7 and pagos[i][3] == "No Pagado\n":
                 vencidos.append(pagos[i])
     return [int(dia), int(mes), int(ano)]
 
@@ -340,7 +346,10 @@ def mostrarVencidos(vencidos, fecha_actual):
     if len(vencidos) > 0:
         for i in range(len(vencidos)):
             n += 1
-            fecha_vencido = vencidos[i][1].split("-")[2:5]
+            if vencidos[i][0] == "Artículo":
+                fecha_vencido = vencidos[i][1].split("-")[2:5]
+            else:
+                fecha_vencido = vencidos[i][1].split("-")[10:13]
             diasDif = pagoVencido(
                 fecha_actual[0],
                 fecha_actual[1],
@@ -376,9 +385,14 @@ def renovarPago(pagos, vencidos, fecha_actual, archivo):
             reg = pagos[i]
             if pagos[i][1] == vencidos[n - 1][1]:
                 aux = reg[1].split("-")
-                aux[2] = str(fecha_actual[0])
-                aux[3] = str(fecha_actual[1])
-                aux[4] = str(fecha_actual[2])
+                if pagos[i][0] == "Artículo":
+                    aux[2] = str(fecha_actual[0])
+                    aux[3] = str(fecha_actual[1])
+                    aux[4] = str(fecha_actual[2])
+                else:
+                    aux[10] = str(fecha_actual[0])
+                    aux[11] = str(fecha_actual[1])
+                    aux[12] = str(fecha_actual[2])
                 reg[1] = "-".join(aux)
             archivo.write("#".join(reg).encode("utf-8"))
         print("--- PAGO RENOVADO ---")
