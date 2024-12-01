@@ -517,9 +517,9 @@ def calculosDespido(
 def registrarPago(datos, calculos, fecha_actual, dias_antiguedad, motivo, ruta):  # void
     archivo = object  # objeto
     totalPago = 0.0  # float
-    dia = 0 # int
-    mes = 0 # int
-    ano = 0 # int
+    dia = 0  # int
+    mes = 0  # int
+    ano = 0  # int
     total = calculos[-1]
     impuestos = calculos[5:8]
     archivo = validar["agregarArchivo"](ruta)
@@ -701,7 +701,6 @@ def nomina(archivo, empleados):
     dia = 0  # int
     mes = 0  # int
     ano = 0  # int
-    nomina_archivo = object
     ventas_archivo = object
     if archivo != None and len(empleados) > 0:
         nombre = validar["manejoNombre"](input("Ingrese el nombre del empleado: "))
@@ -740,7 +739,9 @@ def nomina(archivo, empleados):
                 mes,
                 ano,
                 deducciones,
-            ).encode("utf-8")
+            ).encode(
+                "utf-8"
+            )
         )
         print("--- REGISTRO DE NÓMINA CREADO EN EL MÓDULO DE VENTAS ---")
 
@@ -807,7 +808,6 @@ def razonCancelacion():  # string
         return "Avion"
     else:
         return "Pasajero"
-
 
 
 solucion = diccionario()
