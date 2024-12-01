@@ -9,6 +9,9 @@ def diccionario():
         "validarInt": validarInt,
         "validarFloat": validarFloat,
         "escribirArchivo": escribirArchivo,
+        "validarDia": validarDia,
+        "validarMes": validarMes,
+        "validarAno": validarAno
     }
 
 
@@ -81,6 +84,30 @@ def validarFloat(n):  # float
         except ValueError:
             print("ERROR: Ingresó un valor no numérico")
             n = input("Ingrese el valor correcto: ")
+
+
+def validarDia(dia):  # int
+    while True:
+        dia = validarInt(dia)
+        if 1 <= dia <= 31:
+            return dia
+        dia = input("Ingrese un día válido: ")
+
+
+def validarMes(mes):  # int
+    while True:
+        mes = validarInt(mes)
+        if 1 <= mes <= 12:
+            return mes
+        mes = input("Ingrese un mes válido: ")
+
+
+def validarAno(ano):  # int
+    while True:
+        ano = validarInt(ano)
+        if ano >= 1950:
+            return ano
+        ano = input("Ingrese un año válido: ")
 
 
 validar = diccionario()

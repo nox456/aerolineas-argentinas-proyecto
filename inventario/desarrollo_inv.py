@@ -66,17 +66,25 @@ def registrarPago(archivo):  # void
     nombre = ""  # str
     cantidad = 0  # int
     precio = 0.0  # float
+    dia = 0  # int
+    mes = 0  # int
+    ano = 0  # int
     if archivo != None:
         print("\n-AGREGAR ARTÍCULOS")
         nombre = input("Ingrese el Nombre del Artículo: ")
         precio = validar["validarFloat"](input("Ingrese el precio: "))
         cantidad = validar["validarInt"](input("Ingrese la cantidad: "))
+        dia = validar["validarDia"](input("Ingrese el dia actual: "))
+        mes = validar["validarMes"](input("Ingrese el mes actual: "))
+        ano = validar["validarAno"](input("Ingrese el año actual: "))
         archivo.write(
-            "Artículo#{0}-{1}#{2}#No Pagado\n".format(
-                nombre, cantidad, cantidad * precio
+            "Artículo#{0}-{1}-{2}-{3}-{4}#{5}#No Pagado\n".format(
+                nombre, cantidad, dia, mes, ano, cantidad * precio
             ).encode("utf-8")
         )
         print("\n---ARTÍCULO AGREGADO A LA LISTA DE PAGOS---")
+        print("AVISO: Tiene un plazo máximo de 7 días para pagar el artículo")
+        print("Si se sobrepasa esta fecha el registro se eliminará")
 
 
 def obtenerRuta(rutas):  # string
@@ -250,7 +258,7 @@ def devolverDineroTodo(avion, rutas):  # float
     return monto_final
 
 
-def devolverAsientos(avion): # arreglo uni str
+def devolverAsientos(avion):  # arreglo uni str
     f = 0  # int
     c = 0  # int
     archivo = object

@@ -218,6 +218,8 @@ def liquidacion():  # void
         datos, calculos, fecha_actual, dias_antiguedad, motivo, "pagos/pagos.bin"
     )
     print("¡Liquidación registrada en el módulo de pagos!")
+    print("AVISO: Tiene un plazo máximo de 7 días para pagar la liquidación")
+    print("Si se sobrepasa esta fecha el registro se eliminará")
     return
 
 
@@ -515,6 +517,9 @@ def calculosDespido(
 def registrarPago(datos, calculos, fecha_actual, dias_antiguedad, motivo, ruta):  # void
     archivo = object  # objeto
     totalPago = 0.0  # float
+    dia = 0 # int
+    mes = 0 # int
+    ano = 0 # int
     total = calculos[-1]
     impuestos = calculos[5:8]
     archivo = validar["agregarArchivo"](ruta)
