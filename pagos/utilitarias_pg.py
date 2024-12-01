@@ -10,7 +10,9 @@ def diccionario():
         "escribirArchivo": escribirArchivo,
         "validarDia": validarDia,
         "validarMes": validarMes,
-        "validarAno": validarAno
+        "validarAno": validarAno,
+        "validarNombre": validarNombre,
+        "manejoNombre": manejoNombre
     }
 
 
@@ -97,6 +99,52 @@ def validarAno(ano):  # int
         if ano >= 1950:
             return ano
         ano = input("Ingrese un año válido: ")
+
+
+def validarNombre(nombre):
+    tupla = (
+        "0",
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9",
+        " ",
+        "@",
+        "#",
+        "$",
+        "!",
+        "%",
+        "&",
+        ".",
+        ",",
+        ":",
+        ";",
+        "*",
+        "+",
+        "-",
+        "_",
+        "¿",
+        "?",
+        "¡",
+    )
+    for i in range(len(nombre)):
+        for j in range(len(tupla)):
+            if nombre[i] == tupla[j]:
+                return False
+    return True
+
+
+def manejoNombre(nombre):
+    while True:
+        if validarNombre(nombre) == False:
+            nombre = input("Ingrese un nombre o apellido válido: ")
+        else:
+            return nombre
 
 
 validar = diccionario()

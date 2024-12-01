@@ -7,7 +7,9 @@ def diccionario():
         "leerArchivo": leerArchivo,
         "validarInt": validarInt,
         "validarFloat": validarFloat,
-        "escribirArchivo": escribirArchivo
+        "escribirArchivo": escribirArchivo,
+        "validarNombre": validarNombre,
+        "manejoNombre": manejoNombre
     }
 
 
@@ -70,6 +72,52 @@ def escribirArchivo(nombre):
     except FileNotFoundError:
         print("Objet-File: Archivo no encontrado. ")
         return None
+
+
+def validarNombre(nombre):
+    tupla = (
+        "0",
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9",
+        " ",
+        "@",
+        "#",
+        "$",
+        "!",
+        "%",
+        "&",
+        ".",
+        ",",
+        ":",
+        ";",
+        "*",
+        "+",
+        "-",
+        "_",
+        "¿",
+        "?",
+        "¡",
+    )
+    for i in range(len(nombre)):
+        for j in range(len(tupla)):
+            if nombre[i] == tupla[j]:
+                return False
+    return True
+
+
+def manejoNombre(nombre):
+    while True:
+        if validarNombre(nombre) == False:
+            nombre = input("Ingrese un nombre o apellido válido: ")
+        else:
+            return nombre
 
 
 validar = diccionario()

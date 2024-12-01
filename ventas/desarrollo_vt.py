@@ -12,7 +12,7 @@ def diccionario():
         "registrosNoVendidos": registrosNoVendidos,
         "vender": vender,
         "eliminarRegistroAsiento": eliminarRegistroAsiento,
-        "eliminarRegistroAvion": eliminarRegistroAvion
+        "eliminarRegistroAvion": eliminarRegistroAvion,
     }
 
 
@@ -60,7 +60,10 @@ def listar(ventas):  # void
             if linea[0] == "Boleto":
                 print(
                     "{0:10} {1:25} {2:10.2f} $ {3:8}".format(
-                        linea[0], linea[1], float(linea[2]), linea[3]
+                        linea[0],
+                        "-".join(linea[1].split("-")[0:3]),
+                        float(linea[2]),
+                        linea[3],
                     ),
                     end="",
                 )
@@ -83,20 +86,16 @@ def registrosNoVendidos(ventas, noVendidos):  # void
                 noVendidos.append(ventas[i])
 
 
-def vender(noVendidos, ventas):  # void
-    reg = 0  # int
+def mostrarNoVendidos(noVendidos):  # int
     n = 0  # int
-    monto = 0.0  # float
-    abono = 0.0  # float
-    restante = 0.0  # float
-    if len(noVendidos) > 0 and len(ventas) > 0:
+    if len(noVendidos) > 0:
         print("\n-REGISTROS SIN VENDER")
         for i in range(len(noVendidos)):
             n += 1
             if noVendidos[i][0] == "Boleto":
                 print(
                     "{0}. {1} - {2} - {3:.2f} $".format(
-                        n, noVendidos[i][0], noVendidos[i][1], float(noVendidos[i][2])
+                        n, noVendidos[i][0], "-".join(noVendidos[i][1].split("-")[0:3]), float(noVendidos[i][2])
                     )
                 )
             elif noVendidos[i][0] == "Nomina":
@@ -108,7 +107,17 @@ def vender(noVendidos, ventas):  # void
                         float(noVendidos[i][2]),
                     )
                 )
+    return n
 
+
+def vender(noVendidos, ventas):  # void
+    reg = 0  # int
+    n = 0  # int
+    monto = 0.0  # float
+    abono = 0.0  # float
+    restante = 0.0  # float
+    if len(noVendidos) > 0 and len(ventas) > 0:
+        n = mostrarNoVendidos(noVendidos)
         reg = validar["validarInt"](input("Ingrese el registro (1-" + str(n) + "): "))
         while reg < 1 or reg > n:
             print("ERROR: Selección fuera de rango!")
@@ -122,42 +131,12 @@ def vender(noVendidos, ventas):  # void
         archivo = validar["escribirArchivo"]("ventas.bin")
         if abono < monto:
             restante = monto - abono
-            for i in range(len(ventas)):
-                if ventas[i][1] == nombre:
-                    archivo.write(
-                        "{0}#{1}#{2}#No Vendido\n".format(
-                            ventas[i][0], nombre, restante
-                        ).encode("utf-8")
-                    )
-                else:
-                    archivo.write(
-                        "{0}#{1}#{2}#{3}\n".format(
-                            ventas[i][0],
-                            ventas[i][1],
-                            ventas[i][2],
-                            ventas[i][3].strip(),
-                        ).encode("utf-8")
-                    )
+            restarPrecio(ventas, restante, nombre, archivo)
             print("--- ABONO REALIZADO ---")
             print("Falta: " + str(restante) + " $")
         elif abono > monto:
             restante = abono - monto
-            for i in range(len(ventas)):
-                if ventas[i][1] == nombre:
-                    archivo.write(
-                        "{0}#{1}#{2}#Vendido\n".format(ventas[i][0], nombre, 0).encode(
-                            "utf-8"
-                        )
-                    )
-                else:
-                    archivo.write(
-                        "{0}#{1}#{2}#{3}\n".format(
-                            ventas[i][0],
-                            ventas[i][1],
-                            ventas[i][2],
-                            ventas[i][3].strip(),
-                        ).encode("utf-8")
-                    )
+            marcarVendido(ventas, nombre, archivo)
             print("--- ABONO REALIZADO ---")
             if tipo == "Boleto":
                 solucion_inv["boletoVendido"](
@@ -169,22 +148,7 @@ def vender(noVendidos, ventas):  # void
                 solucion_rh["crearNomina"](nombre.split("-"))
             print("Devolución al usuario: " + str(restante) + " $")
         else:
-            for i in range(len(ventas)):
-                if ventas[i][1] == nombre:
-                    archivo.write(
-                        "{0}#{1}#{2}#Vendido\n".format(ventas[i][0], nombre, 0).encode(
-                            "utf-8"
-                        )
-                    )
-                else:
-                    archivo.write(
-                        "{0}#{1}#{2}#{3}\n".format(
-                            ventas[i][0],
-                            ventas[i][1],
-                            ventas[i][2],
-                            ventas[i][3].strip(),
-                        ).encode("utf-8")
-                    )
+            marcarVendido(ventas, nombre, archivo)
             print("--- ABONO REALIZADO ---")
             if tipo == "Boleto":
                 solucion_inv["boletoVendido"](
@@ -194,6 +158,46 @@ def vender(noVendidos, ventas):  # void
             elif tipo == "Nomina":
                 print("--- NOMINA CREADA ---")
                 solucion_rh["crearNomina"](nombre.split("-"))
+
+
+def restarPrecio(ventas, restante, nombreRegistro, archivo):  # void
+    if archivo != None and len(ventas) > 0:
+        for i in range(len(ventas)):
+            if ventas[i][1] == nombreRegistro:
+                archivo.write(
+                    "{0}#{1}#{2}#No Vendido\n".format(
+                        ventas[i][0], nombreRegistro, restante
+                    ).encode("utf-8")
+                )
+            else:
+                archivo.write(
+                    "{0}#{1}#{2}#{3}\n".format(
+                        ventas[i][0],
+                        ventas[i][1],
+                        ventas[i][2],
+                        ventas[i][3].strip(),
+                    ).encode("utf-8")
+                )
+
+
+def marcarVendido(ventas, nombreRegistro, archivo):  # void
+    if archivo != None and len(ventas) > 0:
+        for i in range(len(ventas)):
+            if ventas[i][1] == nombreRegistro:
+                archivo.write(
+                    "{0}#{1}#{2}#Vendido\n".format(
+                        ventas[i][0], nombreRegistro, 0
+                    ).encode("utf-8")
+                )
+            else:
+                archivo.write(
+                    "{0}#{1}#{2}#{3}\n".format(
+                        ventas[i][0],
+                        ventas[i][1],
+                        ventas[i][2],
+                        ventas[i][3].strip(),
+                    ).encode("utf-8")
+                )
 
 
 def eliminarRegistroAsiento(nombre):  # void
