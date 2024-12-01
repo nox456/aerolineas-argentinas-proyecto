@@ -15,7 +15,8 @@ def diccionario():
         "eliminarRegistroAvion": eliminarRegistroAvion,
         "registrosVencidos": registrosVencidos,
         "mostrarVencidos": mostrarVencidos,
-        "renovarVenta": renovarVenta
+        "renovarVenta": renovarVenta,
+        "cancelarVenta": cancelarVenta
     }
 
 
@@ -429,6 +430,19 @@ def renovarVenta(ventas, vencidas, fecha_actual, archivo):
                 reg[1] = "-".join(aux)
             archivo.write("#".join(reg).encode("utf-8"))
         print("--- VENTA RENOVADA ---")
+
+
+def cancelarVenta(ventas, noVendidos, archivo):
+    n = 0  # int
+    if len(noVendidos) > 0 and archivo != None:
+        mostrarNoVendidos(noVendidos)
+        n = validar["validarInt"](
+            input("Ingrese su opción (1-" + str(len(noVendidos)) + "): ")
+        )
+        for i in range(len(ventas)):
+            if ventas[i][1] != noVendidos[n - 1][1]:
+                archivo.write("#".join(ventas[i]).encode("utf-8"))
+        print("--- VENTA CANCELADA ---")
 
 
 solucion = diccionario()

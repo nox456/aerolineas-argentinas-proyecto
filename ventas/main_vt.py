@@ -48,6 +48,18 @@ def menuVentas():
         if archivo == None:
             return
         solucion["renovarVenta"](ventas, vencidas, fecha_actual, archivo)
+    elif opcion == 4:
+        archivo = validar["leerArchivo"]("ventas.bin")
+        if archivo == None:
+            return
+        cantidad = solucion["cantidadReg"](archivo)
+        ventas = solucion["iniMatriz"](cantidad)
+        solucion["obtenerRegistros"](archivo, ventas)
+        solucion["registrosNoVendidos"](ventas, noVendidos)
+        archivo = validar["escribirArchivo"]("ventas.bin")
+        if archivo == None:
+            return
+        solucion["cancelarVenta"](ventas, noVendidos, archivo)
     elif opcion == 5:
         print("GRACIAS POR USAR EL SOFTWARE!")
     else:
