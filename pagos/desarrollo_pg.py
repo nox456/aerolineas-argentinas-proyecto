@@ -192,7 +192,7 @@ def comprobarAbono(abono, monto, pagos, nombreRegistro, archivo, tipo):  # void
             pagarLiquidacion(nombreRegistro, tipo == "Liq. Despido")
 
 
-def mostrarNoPagados(noPagados):
+def mostrarNoPagados(noPagados):  # int
     n = 0  # int
     if len(noPagados) > 0:
         for i in range(len(noPagados)):
@@ -235,7 +235,7 @@ def restarPrecio(pagos, nombreRegistro, restante, archivo):  # void
                 )
 
 
-def marcarPagado(pagos, nombreRegistro, archivo):
+def marcarPagado(pagos, nombreRegistro, archivo):  # void
     if len(pagos) > 0 and archivo != None:
         for i in range(len(pagos)):
             if pagos[i][1] == nombreRegistro:
@@ -299,7 +299,7 @@ def pagarLiquidacion(nombreRegistro, esDespido):  # void
     print("--- LIQUIDACIÓN CREADA ---")
 
 
-def eliminarRegistro(nombreRegistro, pagos):
+def eliminarRegistro(nombreRegistro, pagos):  # void
     archivo = object
     archivo = validar["escribirArchivo"]("pagos.bin")
     if archivo != None:
@@ -339,7 +339,7 @@ def registrosVencidos(pagos, vencidos):  # arreglo uni int
     return [int(dia), int(mes), int(ano)]
 
 
-def mostrarVencidos(vencidos, fecha_actual):
+def mostrarVencidos(vencidos, fecha_actual):  # void
     n = 0  # int
     diasDif = 0  # int
     fecha_vencido = []  # arreglo uni str
@@ -373,7 +373,7 @@ def mostrarVencidos(vencidos, fecha_actual):
         print("-----------------------------")
 
 
-def renovarPago(pagos, vencidos, fecha_actual, archivo):
+def renovarPago(pagos, vencidos, fecha_actual, archivo):  # void
     n = 0  # int
     reg = []  # arreglo uni str
     aux = []  # arreglo uni str
@@ -398,7 +398,7 @@ def renovarPago(pagos, vencidos, fecha_actual, archivo):
         print("--- PAGO RENOVADO ---")
 
 
-def cancelarPago(pagos, noPagados, archivo):
+def cancelarPago(pagos, noPagados, archivo):  # void
     n = 0  # int
     if len(noPagados) > 0 and archivo != None:
         mostrarNoPagados(noPagados)

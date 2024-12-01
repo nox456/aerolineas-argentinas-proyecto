@@ -294,7 +294,7 @@ def ventaVencido(dia, mes, ano, diaV, mesV, anoV):  # int
     return diasTotales - diasVTotales
 
 
-def comprobarAbono(abono, monto, ventas, nombreRegistro, tipo, archivo):
+def comprobarAbono(abono, monto, ventas, nombreRegistro, tipo, archivo):  # void
     restante = 0.0  # float
     if abono < monto:
         restante = monto - abono
@@ -362,7 +362,7 @@ def registrosVencidos(ventas, vencidas):  # arreglo uni int
     return [int(dia), int(mes), int(ano)]
 
 
-def mostrarVencidos(vencidas, fecha_actual):
+def mostrarVencidos(vencidas, fecha_actual):  # void
     n = 0  # int
     diasDif = 0  # int
     fecha_vencido = []  # arreglo uni str
@@ -407,7 +407,7 @@ def mostrarVencidos(vencidas, fecha_actual):
         print("-----------------------------")
 
 
-def renovarVenta(ventas, vencidas, fecha_actual, archivo):
+def renovarVenta(ventas, vencidas, fecha_actual, archivo):  # void
     n = 0  # int
     reg = []  # arreglo uni str
     aux = []  # arreglo uni str
@@ -432,7 +432,7 @@ def renovarVenta(ventas, vencidas, fecha_actual, archivo):
         print("--- VENTA RENOVADA ---")
 
 
-def cancelarVenta(ventas, noVendidos, archivo):
+def cancelarVenta(ventas, noVendidos, archivo):  # void
     n = 0  # int
     if len(noVendidos) > 0 and archivo != None:
         mostrarNoVendidos(noVendidos)
