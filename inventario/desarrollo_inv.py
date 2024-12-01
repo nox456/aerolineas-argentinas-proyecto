@@ -84,7 +84,6 @@ def registrarPago(archivo):  # void
         )
         print("\n---ARTÍCULO AGREGADO A LA LISTA DE PAGOS---")
         print("AVISO: Tiene un plazo máximo de 7 días para pagar el artículo")
-        print("Si se sobrepasa esta fecha el registro se eliminará")
 
 
 def obtenerRuta(rutas):  # string
@@ -151,13 +150,20 @@ def obtenerAsientoVuelo(asientos):  # arreglo uni int
 
 
 def registrarVenta(archivo, asiento, ruta, precio):  # void
+    dia = 0  # int
+    mes = 0  # int
+    ano = 0  # int
     if archivo != None:
+        dia = validar["validarDia"](input("Ingrese el dia actual: "))
+        mes = validar["validarMes"](input("Ingrese el mes actual: "))
+        ano = validar["validarAno"](input("Ingrese el año actual: "))
         archivo.write(
-            "Boleto#{0}-{1}-{2}#{3:.2f}#No Vendido\n".format(
-                ruta, asiento[0], asiento[1].strip(), precio
+            "Boleto#{0}-{1}-{2}-{3}-{4}-{5}#{6:.2f}#No Vendido\n".format(
+                ruta, asiento[0], asiento[1].strip(), dia, mes, ano, precio
             ).encode("utf-8")
         )
         print("\n---BOLETO AGREGADO A LA LISTA DE VENTAS---")
+        print("AVISO: Tiene un plazo máximo de 7 días para vender el boleto")
 
 
 def agregar(nombre, cantidad):  # void

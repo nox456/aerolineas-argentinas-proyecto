@@ -14,7 +14,7 @@ def diccionario():
         "registrosVencidos": registrosVencidos,
         "mostrarVencidos": mostrarVencidos,
         "renovarPago": renovarPago,
-        "cancelarPago": cancelarPago
+        "cancelarPago": cancelarPago,
     }
 
 
@@ -152,9 +152,8 @@ def pagar(noPagados, pagos):  # void
             )
         if difFecha >= 7:
             print(
-                "AVISO: El registro que desea pagar está vencido! Por favor vuela a registrar el pago"
+                "AVISO: El registro que desea pagar está vencido! Por favor renueve el pago"
             )
-            eliminarRegistro(nombre, pagos)
         else:
             abono = validar["validarFloat"](input("Ingrese el abono: "))
             archivo = validar["escribirArchivo"]("pagos.bin")
@@ -384,6 +383,7 @@ def renovarPago(pagos, vencidos, fecha_actual, archivo):
             archivo.write("#".join(reg).encode("utf-8"))
         print("--- PAGO RENOVADO ---")
 
+
 def cancelarPago(pagos, noPagados, archivo):
     n = 0  # int
     if len(noPagados) > 0 and archivo != None:
@@ -395,8 +395,6 @@ def cancelarPago(pagos, noPagados, archivo):
             if pagos[i][1] != noPagados[n - 1][1]:
                 archivo.write("#".join(pagos[i]).encode("utf-8"))
         print("--- PAGO CANCELADO ---")
-
-
 
 
 solucion = diccionario()
