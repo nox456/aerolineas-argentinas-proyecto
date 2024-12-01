@@ -11,6 +11,9 @@ def diccionario():
         "listar": listar,
         "registrosNoPagados": registrosNoPagados,
         "pagar": pagar,
+        "registrosVencidos": registrosVencidos,
+        "mostrarVencidos": mostrarVencidos,
+        "renovarPago": renovarPago,
     }
 
 
@@ -46,7 +49,16 @@ def obtenerRegistros(archivo, matriz):  # void
 
 
 def listar(pagos):  # void
+    dia = 0  # int
+    mes = 0  # int
+    ano = 0  # int
+    diasDif = 0  # int
+    fecha_vencido = []  # arreglo uni str
+    estado = ""  # str
     if len(pagos) > 0:
+        dia = validar["validarDia"](input("Ingrese el dia actual: "))
+        mes = validar["validarMes"](input("Ingrese el mes actual: "))
+        ano = validar["validarAno"](input("Ingrese el año actual: "))
         print("\n-LISTA DE PAGOS")
         print("--------------------------------------------------")
         print(
@@ -55,20 +67,33 @@ def listar(pagos):  # void
             )
         )
         for linea in pagos:
+            fecha_vencido = linea[1].split("-")[2:5]
+            diasDif = pagoVencido(
+                dia,
+                mes,
+                ano,
+                int(fecha_vencido[0]),
+                int(fecha_vencido[1]),
+                int(fecha_vencido[2]),
+            )
+            if diasDif >= 7 and linea[3] == "No Pagado\n":
+                estado = "Vencido\n"
+            else:
+                estado = linea[3]
             if linea[0] == "Liq. Despido" or linea[0] == "Liq. Renuncia":
                 print(
                     "{0:15} {1:15} {2:12.2f} $ {3:5}".format(
                         linea[0],
                         "-".join(linea[1].split("-")[0:2]),
                         float(linea[2]),
-                        linea[3],
+                        estado,
                     ),
                     end="",
                 )
             else:
                 print(
                     "{0:15} {1:15} {2:12.2f} $ {3:5}".format(
-                        linea[0], linea[1].split("-")[0], float(linea[2]), linea[3]
+                        linea[0], linea[1].split("-")[0], float(linea[2]), estado
                     ),
                     end="",
                 )
@@ -280,6 +305,83 @@ def eliminarRegistro(nombreRegistro, pagos):
                 archivo.write("#".join(pagos[i]).encode("utf-8"))
         archivo.close()
     print("--- REGISTRO DE PAGO ELIMINADO ---")
+
+
+def registrosVencidos(pagos, vencidos):  # arreglo uni int
+    dia = 0  # int
+    mes = 0  # int
+    ano = 0  # int
+    diasDif = 0  # int
+    fecha_vencido = []  # arreglo uni str
+    if len(pagos) > 0 and len(vencidos) == 0:
+        dia = validar["validarDia"](input("Ingrese el dia actual: "))
+        mes = validar["validarMes"](input("Ingrese el mes actual: "))
+        ano = validar["validarAno"](input("Ingrese el año actual: "))
+        for i in range(len(pagos)):
+            fecha_vencido = pagos[i][1].split("-")[2:5]
+            diasDif = pagoVencido(
+                dia,
+                mes,
+                ano,
+                int(fecha_vencido[0]),
+                int(fecha_vencido[1]),
+                int(fecha_vencido[2]),
+            )
+            print("\n-PAGOS VENCIDOS")
+            if diasDif >= 7:
+                vencidos.append(pagos[i])
+    return [int(dia), int(mes), int(ano)]
+
+
+def mostrarVencidos(vencidos, fecha_actual):
+    n = 0  # int
+    diasDif = 0  # int
+    fecha_vencido = []  # arreglo uni str
+    if len(vencidos) > 0:
+        for i in range(len(vencidos)):
+            n += 1
+            fecha_vencido = vencidos[i][1].split("-")[2:5]
+            diasDif = pagoVencido(
+                fecha_actual[0],
+                fecha_actual[1],
+                fecha_actual[2],
+                int(fecha_vencido[0]),
+                int(fecha_vencido[1]),
+                int(fecha_vencido[2]),
+            )
+            print(
+                "{0}. {1} - {2} - {3:.2f} $ - Vencido hace {4} días".format(
+                    n,
+                    vencidos[i][0],
+                    "-".join(vencidos[i][1].split("-")[0:1]),
+                    float(vencidos[i][2]),
+                    diasDif,
+                )
+            )
+    else:
+        print("-----------------------------")
+        print("No hay registros vencidos...")
+        print("-----------------------------")
+
+
+def renovarPago(pagos, vencidos, fecha_actual, archivo):
+    n = 0  # int
+    reg = []  # arreglo uni str
+    aux = []  # arreglo uni str
+    if len(vencidos) > 0 and archivo != None:
+        n = validar["validarInt"](
+            input("Ingrese su opción (1-" + str(len(vencidos)) + "): ")
+        )
+        for i in range(len(pagos)):
+            reg = pagos[i]
+            if pagos[i][1] == vencidos[n - 1][1]:
+                aux = reg[1].split("-")
+                aux[2] = str(fecha_actual[0])
+                aux[3] = str(fecha_actual[1])
+                aux[4] = str(fecha_actual[2])
+                reg[1] = "-".join(aux)
+            archivo.write("#".join(reg).encode("utf-8"))
+        print("--- PAGO RENOVADO ---")
 
 
 solucion = diccionario()

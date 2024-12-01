@@ -8,12 +8,15 @@ def menuPagos():
     archivo = object
     pagos = [] # arreglo uni str
     noPagados = [] # arreglo uni str
+    vencidos = [] # arreglo uni str
+    fecha_actual = [] # arreglo uni int
     print("\n**** PAGOS ****\n")
     print("1. Listar pagos")
     print("2. Pagar")
+    print("3. Renovar pago")
     print("---------------------------------")
-    print("3. SALIR DEL PROGRAMA\n")
-    opcion = validar["validarOpcion"](input("Ingrese una opción del menú (1-3): "))
+    print("4. SALIR DEL PROGRAMA\n")
+    opcion = validar["validarOpcion"](input("Ingrese una opción del menú (1-4): "))
     if opcion == 1:
         archivo = validar["leerArchivo"]("pagos.bin")
         if archivo == None:
@@ -33,6 +36,19 @@ def menuPagos():
         solucion["registrosNoPagados"](pagos, noPagados)
         solucion["pagar"](noPagados, pagos)
     elif opcion == 3:
+        archivo = validar["leerArchivo"]("pagos.bin")
+        if archivo == None:
+            return
+        cantidad = solucion["cantidadReg"](archivo)
+        pagos = solucion["iniMatriz"](cantidad)
+        solucion["obtenerRegistros"](archivo, pagos)
+        fecha_actual = solucion["registrosVencidos"](pagos, vencidos)
+        solucion["mostrarVencidos"](vencidos, fecha_actual)
+        archivo = validar["escribirArchivo"]("pagos.bin")
+        if archivo == None:
+            return
+        solucion["renovarPago"](pagos, vencidos, fecha_actual, archivo)
+    elif opcion == 4:
         print("GRACIAS POR USAR EL SOFTWARE!")
     else:
         print("ERROR: Opción no válida!")
