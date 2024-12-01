@@ -14,6 +14,7 @@ def diccionario():
         "registrosVencidos": registrosVencidos,
         "mostrarVencidos": mostrarVencidos,
         "renovarPago": renovarPago,
+        "cancelarPago": cancelarPago
     }
 
 
@@ -382,6 +383,20 @@ def renovarPago(pagos, vencidos, fecha_actual, archivo):
                 reg[1] = "-".join(aux)
             archivo.write("#".join(reg).encode("utf-8"))
         print("--- PAGO RENOVADO ---")
+
+def cancelarPago(pagos, noPagados, archivo):
+    n = 0  # int
+    if len(noPagados) > 0 and archivo != None:
+        mostrarNoPagados(noPagados)
+        n = validar["validarInt"](
+            input("Ingrese su opción (1-" + str(len(noPagados)) + "): ")
+        )
+        for i in range(len(pagos)):
+            if pagos[i][1] != noPagados[n - 1][1]:
+                archivo.write("#".join(pagos[i]).encode("utf-8"))
+        print("--- PAGO CANCELADO ---")
+
+
 
 
 solucion = diccionario()
