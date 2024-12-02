@@ -181,7 +181,7 @@ def comprobarAbono(abono, monto, pagos, nombreRegistro, archivo, tipo):  # void
         if tipo == "Artículo":
             pagarArticulo(nombreRegistro)
         elif tipo == "Liq. Despido" or tipo == "Liq. Renuncia":
-            pagarLiquidacion(nombreRegistro, tipo == "Liq. Despido")
+            pagarLiquidacion(nombreRegistro, tipo)
         print("Devolución al usuario: " + str(restante) + " $")
     else:
         marcarPagado(pagos, nombreRegistro, archivo)
@@ -189,7 +189,7 @@ def comprobarAbono(abono, monto, pagos, nombreRegistro, archivo, tipo):  # void
         if tipo == "Artículo":
             pagarArticulo(nombreRegistro)
         elif tipo == "Liq. Despido" or tipo == "Liq. Renuncia":
-            pagarLiquidacion(nombreRegistro, tipo == "Liq. Despido")
+            pagarLiquidacion(nombreRegistro, tipo)
 
 
 def mostrarNoPagados(noPagados):  # int
@@ -286,11 +286,14 @@ def pagarLiquidacion(nombreRegistro, esDespido):  # void
     datos = nombreRegistro.split("-")[0:10]
     fecha_actual = nombreRegistro.split("-")[10:13]
     dias_antiguedad = nombreRegistro.split("-")[13]
-    if esDespido:
-        calculos = nombreRegistro.split("-")[14:27]
+    if esDespido == "Liq. Renuncia":
+        calculos = nombreRegistro.split("-")[14:24]
+        solucion_rh["generarArchivoRenuncia"](
+        datos, calculos, fecha_actual, float(dias_antiguedad)
+    )
     else:
-        calculos = nombreRegistro.split("-")[14:30]
-    solucion_rh["generarArchivoDespido"](
+        calculos = nombreRegistro.split("-")[14:27]
+        solucion_rh["generarArchivoDespido"](
         datos, calculos, fecha_actual, float(dias_antiguedad)
     )
     solucion_rh["eliminarRegistro"](

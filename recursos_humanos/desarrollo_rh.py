@@ -104,8 +104,8 @@ def agregar(archivo, roles):  # void
     n = 0  # int
     indice_rol = 0  # int
     if archivo != None and len(roles) > 0:
-        nombre = validar["manejoNombre"](input("Ingrese el nombre del empleado: "))
-        apellido = validar["manejoNombre"](input("Ingrese el apellido del empleado: "))
+        nombre = validar["manejoNombre"](input("Ingrese el nombre del empleado: ")).title()
+        apellido = validar["manejoNombre"](input("Ingrese el apellido del empleado: ")).title()
         cedula = validar["entero"](input("Ingrese la cédula del empleado: "))
         edad = validar["entero"](input("Ingrese la edad del empleado: "))
         fecha = validar["entero"](input("Ingrese el año de nacimiento del empleado: "))
