@@ -277,25 +277,20 @@ def pagarArticulo(nombreRegistro):  # void
     print("--- ARTÍCULO PAGADO Y AGREGADO AL INVENTARIO ---")
 
 
-def pagarLiquidacion(nombreRegistro, esDespido):  # void
+def pagarLiquidacion(nombreRegistro, motivo):  # void
     datos = []  # arreglo uni str
     fecha_actual = []  # arreglo uni str
-    dias_antiguedad = ""  # str
-    calculos = []  # arreglo uni float
+    dias_antiguedad = 0  # int
 
     datos = nombreRegistro.split("-")[0:10]
     fecha_actual = nombreRegistro.split("-")[10:13]
-    dias_antiguedad = nombreRegistro.split("-")[13]
-    if esDespido == "Liq. Renuncia":
-        calculos = nombreRegistro.split("-")[14:24]
-        solucion_rh["generarArchivoRenuncia"](
-        datos, calculos, fecha_actual, float(dias_antiguedad)
-    )
-    else:
-        calculos = nombreRegistro.split("-")[14:27]
-        solucion_rh["generarArchivoDespido"](
-        datos, calculos, fecha_actual, float(dias_antiguedad)
-    )
+    dias_antiguedad = int(float(nombreRegistro.split("-")[13]) * 365)
+    calculos_basicos = solucion_rh["calculosBasicos"](
+        dias_antiguedad, (30 - int(fecha_actual[0])), int(fecha_actual[1]), float(datos[6]))
+    indemnizaciones = solucion_rh["calculoIndemnizaciones"](
+        dias_antiguedad, (30 - int(fecha_actual[0])), int(fecha_actual[1]), float(datos[6]), motivo)
+    solucion_rh["generarArchivoLiq"](
+        datos, fecha_actual, dias_antiguedad, calculos_basicos, indemnizaciones)
     solucion_rh["eliminarRegistro"](
         nombreRegistro.split("-")[0], nombreRegistro.split("-")[1]
     )

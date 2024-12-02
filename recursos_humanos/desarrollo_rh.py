@@ -10,8 +10,9 @@ def diccionario():
         "iniMatriz": iniMatriz,
         "obtenerRegistros": obtenerRegistros,
         "nomina": nomina,
-        "generarArchivoRenuncia": generarArchivoRenuncia,
-        "generarArchivoDespido": generarArchivoDespido,
+        "calculosBasicos": calculosBasicos,
+        "calculoIndemnizaciones": calculoIndemnizaciones,
+        "generarArchivoLiq": generarArchivo,
         "eliminarRegistro": eliminarRegistro,
         "crearNomina": crearNomina,
         "razonCancelacion": razonCancelacion,
@@ -167,24 +168,19 @@ def liquidacion():  # void
     sueldo_basico = 0.0  # float
     posicion = 0  # int
     dias_antiguedad = 0  # int
-    dias_vacaciones = 0  # int
     dias_no_trabajados = 0  # int
     motivo = ""  # str
     motivos = {1: "Renuncia", 2: "Despido"}
-    funciones = {"Renuncia": calculosRenuncia, "Despido": calculosDespido}
-    archivos = {"Renuncia": generarArchivoRenuncia, "Despido": generarArchivoDespido}
 
     nombre = validar["manejoNombre"](input("Ingrese el nombre del empleado: ")).title()
-    apellido = validar["manejoNombre"](
-        input("Ingrese el apellido del empleado: ")
-    ).title()
+    apellido = validar["manejoNombre"](input("Ingrese el apellido del empleado: ")).title()
     posicion = buscar(archivo, nombre, apellido)
     if posicion == None:
         return
 
     print("\n\tMotivos de Liquidación\t\n1) Renuncia\n2) Despido\n3) Salir ")
-    opcion = validar["validarOpcionDict"](input("Ingrese una opción: "), funciones)
-    if opcion == len(funciones) + 1:
+    opcion = validar["validarOpcionDict"](input("Ingrese una opción: "), motivos)
+    if opcion == len(motivos) + 1:
         return
     motivo = motivos[opcion]
 
@@ -203,19 +199,16 @@ def liquidacion():  # void
         + (fecha_actual[1] - fecha_ingreso[1]) * 30
         + (fecha_actual[2] - fecha_ingreso[2]) * 365
     )
-    dias_vacaciones = vacaciones((dias_antiguedad / 365))
     dias_no_trabajados = 30 - fecha_actual[0]
     archivo.close()
 
-    calculos = funciones[motivo](
-        dias_antiguedad,
-        dias_vacaciones,
-        dias_no_trabajados,
-        fecha_actual[1],
-        sueldo_basico,
+    calculos_basicos = calculosBasicos(
+        dias_antiguedad, dias_no_trabajados, fecha_actual[1], sueldo_basico)
+    indemnizaciones = calculoIndemnizaciones(
+        dias_antiguedad, dias_no_trabajados, fecha_actual[1], sueldo_basico, motivo
     )
     registrarPago(
-        datos, calculos, fecha_actual, dias_antiguedad, motivo, "pagos/pagos.bin"
+        datos, calculos_basicos, indemnizaciones, fecha_actual, dias_antiguedad, motivo, "pagos/pagos.bin"
     )
     print("¡Liquidación registrada en el módulo de pagos!")
     print("AVISO: Tiene un plazo máximo de 7 días para pagar la liquidación")
@@ -223,178 +216,10 @@ def liquidacion():  # void
     return
 
 
-def generarArchivoRenuncia(datos, calculos, fecha_actual, dias_antiguedad):  # void
-    if (
-        len(datos) > 0
-        and len(calculos) > 0
-        and len(fecha_actual) > 0
-        and dias_antiguedad >= 0
-    ):
-        archivo_nuevo = validar["crearArchivo"](
-            "Utilidades {} {}.{}-{}-{}".format(
-                datos[0], datos[1], fecha_actual[0], fecha_actual[1], fecha_actual[2]
-            )
-        )
-        archivo_nuevo.write(
-            """
-                    Liquidacion Prestaciones Sociales
-                            Fecha: {3}/{4}/{5}
-----------------------------------------------------------------------
-Nombre: {0} {1}                            Dni: {2} 
-Fecha de Ingreso: {6}/{7}/{8}                  Antiguedad: {9:.1f} 
-Fecha de Retiro: {3}/{4}/{5}                   Motivo del retiro: Renuncia
-Sueldo Basico: {10:.2f}
-----------------------------------------------------------------------
-                            Remuneraciones
-                            
-    Detalle                                 Total $(ARS)
-Sueldo Basico                               {10:.2f}
-Antiguedad                                  {11:.2f}
-Aguinaldo                                   {12:.2f}
-----------------------------------------------------------------------
-Sueldo Bruto                                {13:.2f}
-----------------------------------------------------------------------
-                            Aportes del trabajador
-                        
-Jubilacion y/o Pension (SIPA)               {14:.2f}
-Obra Social PAMI                            {15:.2f}
-Obra Social Actual                          {16:.2f}
-----------------------------------------------------------------------
-Sueldo Neto                                 {17:.2f}
-----------------------------------------------------------------------
-                            Indemnizaciones
-                            
-Vacaciones no gozadas                       {18:.2f}
-----------------------------------------------------------------------
-Importe final a cobrar                      {19:.2f}
 
-                
-                
-                
-___________________________________        _______________________________
-Entregado por: Aerolineas Argentina        Recibido por: {0} {1}
-                                                                
-                """.format(
-                datos[0],
-                datos[1],
-                int(datos[2]),
-                fecha_actual[0],
-                fecha_actual[1],
-                fecha_actual[2],
-                int(datos[7]),
-                int(datos[8]),
-                int(datos[9]),
-                (dias_antiguedad / 365),
-                float(datos[6]),
-                float(calculos[3]),
-                float(calculos[4]),
-                float(calculos[1]),
-                float(calculos[5]),
-                float(calculos[6]),
-                float(calculos[7]),
-                float(calculos[2]),
-                float(calculos[8]),
-                float(calculos[9]),
-            )
-        )
-
-        archivo_nuevo.close()
-        return
-
-
-def generarArchivoDespido(datos, calculos, fecha_actual, dias_antiguedad):
-    if (
-        len(datos) > 0
-        and len(calculos) > 0
-        and len(fecha_actual) > 0
-        and dias_antiguedad >= 0
-    ):
-        archivo_nuevo = validar["crearArchivo"](
-            "Utilidades {} {}.{}-{}-{}".format(
-                datos[0], datos[1], fecha_actual[0], fecha_actual[1], fecha_actual[2]
-            )
-        )
-
-        archivo_nuevo.write(
-            """
-                    Liquidacion Prestaciones Sociales
-                            Fecha: {3}/{4}/{5}
-----------------------------------------------------------------------
-Nombre: {0} {1}                            Dni: {2} 
-Fecha de Ingreso: {6}/{7}/{8}                  Antiguedad: {9:.1f} 
-Fecha de Retiro: {3}/{4}/{5}                   Motivo del retiro: Despido
-Sueldo Basico: {10:.2f}
-----------------------------------------------------------------------
-                            Remuneraciones
-                            
-    Detalle                                 Total $(ARS)
-Sueldo Basico                               {10:.2f}
-Antiguedad                                  {11:.2f}
-Aguinaldo                                   {12:.2f}
-----------------------------------------------------------------------
-Sueldo Bruto                                {13:.2f}
-----------------------------------------------------------------------
-                            Aportes del trabajador
-                        
-Jubilacion y/o Pension (SIPA)               {14:.2f}
-Obra Social PAMI                            {15:.2f}
-Obra Social Actual                          {16:.2f}
-----------------------------------------------------------------------
-Sueldo Neto                                 {17:.2f}
-----------------------------------------------------------------------
-                            Indemnizaciones
-                            
-Vacaciones no gozadas                       {18:.2f}
-Integracion mes de despido                  {19:.2f}
-Sac de la integracion                       {20:.2f}
-Indemnizacion por Despido                   {21:.2f}
-
-----------------------------------------------------------------------
-Importe final a cobrar                      {22:.2f}
-
-                
-                
-                
-___________________________________        _______________________________
-Entregado por: Aerolineas Argentina        Recibido por: {0} {1}
-                                                                
-                """.format(
-                datos[0],
-                datos[1],
-                int(datos[2]),
-                fecha_actual[0],
-                fecha_actual[1],
-                fecha_actual[2],
-                int(datos[7]),
-                int(datos[8]),
-                int(datos[9]),
-                (dias_antiguedad / 365),
-                float(datos[6]),
-                float(calculos[3]),
-                float(calculos[4]),
-                float(calculos[1]),
-                float(calculos[5]),
-                float(calculos[6]),
-                float(calculos[7]),
-                float(calculos[2]),
-                float(calculos[8]),
-                float(calculos[9]),
-                float(calculos[10]),
-                float(calculos[11]),
-                float(calculos[12]),
-            )
-        )
-
-        archivo_nuevo.close()
-        return
-
-
-def calculosRenuncia(
-    dias_antiguedad, dias_vacaciones, dias_no_trabajados, mes, sueldo_basico
-):  # tupla
+def calculosBasicos(dias_antiguedad, dias_no_trabajados, mes, sueldo_basico):  # tupla
     if (
         dias_antiguedad >= 0
-        and dias_vacaciones >= 0
         and dias_no_trabajados >= 0
         and mes >= 0
         and sueldo_basico >= 0
@@ -403,7 +228,6 @@ def calculosRenuncia(
         dias_ano_actual = 0  # int
         dias_semestre = 0  # int
         comision_antiguedad = 0.0  # float
-        vacaciones_no_gozadas = 0.0  # float
         aguinaldo = 0.0  # float
         sueldo_bruto = 0.0  # float
         jubilacion = 0.0  # float
@@ -412,9 +236,6 @@ def calculosRenuncia(
         dias_ano_actual = mes * 30
 
         comision_antiguedad = (sueldo_basico * 0.01) * (dias_antiguedad / 365)
-        vacaciones_no_gozadas = (
-            (sueldo_basico / 25) * dias_vacaciones * (dias_ano_actual / 360)
-        )
         if dias_ano_actual >= 180:
             dias_semestre = dias_ano_actual - 180
         aguinaldo = (dias_semestre / 180) * (sueldo_basico / 2)
@@ -426,108 +247,144 @@ def calculosRenuncia(
         obra_social = sueldo_bruto * 0.03
 
         sueldo_neto = sueldo_bruto - jubilacion - obra_social_pami - obra_social
-        total = sueldo_neto + vacaciones_no_gozadas
+        
+        remuneraciones = {
+            "Sueldo Basico": sueldo_basico,
+            "Antiguedad": comision_antiguedad,
+            "Aguinaldo": aguinaldo
+        }
+        aportes = {
+            "Jubilacion y/o Pension (SIPA)": jubilacion,
+            "Obra Social Pami": obra_social_pami,
+            "Obra Social Actual": obra_social
+        }
+        sueldos = {
+            "Sueldo Basico": sueldo_basico,
+            "Sueldo Bruto": sueldo_bruto,
+            "Sueldo Neto": sueldo_neto,
+        }
+        return (remuneraciones, aportes, sueldos)
 
-        calculos = (
-            sueldo_basico,
-            sueldo_bruto,
-            sueldo_neto,
-            comision_antiguedad,
-            aguinaldo,
-            jubilacion,
-            obra_social_pami,
-            obra_social,
-            vacaciones_no_gozadas,
-            total,
-        )
 
-        return calculos
-
-
-def calculosDespido(
-    dias_antiguedad, dias_vacaciones, dias_no_trabajados, mes, sueldo_basico
-):  # tupla
+def calculoIndemnizaciones(
+    dias_antiguedad, dias_no_trabajados, mes, sueldo_basico, motivo
+    ): # Diccionario
     if (
         dias_antiguedad >= 0
-        and dias_vacaciones >= 0
         and dias_no_trabajados >= 0
         and mes >= 0
         and sueldo_basico >= 0
+        and ((motivo == "Liq. Despido" or motivo == "Liq. Renuncia") 
+             or motivo == "Despido" or motivo == "Renuncia")
     ):
-
-        dias_ano_actual = 0  # int
-        dias_semestre = 0  # int
-        comision_antiguedad = 0.0  # float
-        vacaciones_no_gozadas = 0.0  # float
-        integracion_mes = 0.0  # float
-        integracion_sac = 0.0  # float
-        indemnizacion_despido = 0.0  # float
-        aguinaldo = 0.0  # float
-        sueldo_bruto = 0.0  # float
-        jubilacion = 0.0  # float
-        obra_social_pami = 0.0  # float
-        sueldo_neto = 0.0  # float
-        total = 0.0  # float
+        dias_ano_actual = 0 # int
+        dias_vacaciones = 0 # int
         dias_ano_actual = mes * 30
-
-        comision_antiguedad = (sueldo_basico * 0.01) * (dias_antiguedad / 365)
-        vacaciones_no_gozadas = (
-            (sueldo_basico / 25) * dias_vacaciones * (dias_ano_actual / 360)
-        )
+        dias_vacaciones = vacaciones(dias_antiguedad / 365)
+        
+        vacaciones_no_gozadas = ((sueldo_basico / 25) * dias_vacaciones * (dias_ano_actual / 360))
         integracion_mes = (sueldo_basico / 30) * dias_no_trabajados
         integracion_sac = integracion_mes * 0.08333
         indemnizacion_despido = sueldo_basico * (dias_antiguedad / 365)
-        if dias_ano_actual >= 180:
-            dias_semestre = dias_ano_actual - 180
-        aguinaldo = (dias_semestre / 180) * (sueldo_basico / 2)
+        
+        dict_renuncia = {"Vacaciones no gozadas": vacaciones_no_gozadas}
+        dict_despido = {
+            "Vacaciones no gozadas": vacaciones_no_gozadas,
+            "Integracion mes de despido": integracion_mes,
+            "Sac de la integracion": integracion_sac,
+            "Indemnizacion por despido": indemnizacion_despido
+        }
+        if motivo == "Renuncia" or motivo == "Despido": 
+          tipos_indemnizaciones = {
+            "Renuncia": dict_renuncia,
+            "Despido": dict_despido
+        }  
+        else:
+            tipos_indemnizaciones = {
+                "Liq. Renuncia": dict_renuncia,
+                "Liq. Despido": dict_despido
+            }
 
-        sueldo_bruto = sueldo_basico + comision_antiguedad + aguinaldo
-
-        jubilacion = sueldo_bruto * 0.11
-        obra_social_pami = sueldo_bruto * 0.03
-        obra_social = sueldo_bruto * 0.03
-        sueldo_neto = sueldo_bruto - jubilacion - obra_social_pami - obra_social
-        total = (
-            sueldo_neto
-            + vacaciones_no_gozadas
-            + integracion_mes
-            + integracion_sac
-            + indemnizacion_despido
-        )
-
-        calculos = (
-            sueldo_basico,
-            sueldo_bruto,
-            sueldo_neto,
-            comision_antiguedad,
-            aguinaldo,
-            jubilacion,
-            obra_social_pami,
-            obra_social,
-            vacaciones_no_gozadas,
-            integracion_mes,
-            integracion_sac,
-            indemnizacion_despido,
-            total,
-        )
-
-        return calculos
+        return tipos_indemnizaciones[motivo]
 
 
-def registrarPago(datos, calculos, fecha_actual, dias_antiguedad, motivo, ruta):  # void
+def generarArchivo(
+    datos, fecha_actual, dias_antiguedad, calculos_basicos, indemnizaciones
+    ): # void procedimiento
+    if (
+        len(datos) > 0
+        and len(fecha_actual) > 0
+        and dias_antiguedad >= 0
+        and len(calculos_basicos) > 0
+        and len(indemnizaciones) > 0
+    ):
+        total = 0.0 # float
+        total += calculos_basicos[2]["Sueldo Neto"]
+        archivo_nuevo = validar["crearArchivo"]("{} {} {}-{}-{}".format(
+            datos[0], datos[1], fecha_actual[0], fecha_actual[1], fecha_actual[2]))
+        encabezado ="""
+                    Liquidacion Prestaciones Sociales
+                            Fecha: {3}/{4}/{5}
+----------------------------------------------------------------------
+Nombre: {0} {1}                                Dni: {2} 
+Fecha de Ingreso: {6}/{7}/{8}                  Antiguedad: {9:.1f} 
+Fecha de Retiro: {3}/{4}/{5}                   
+Sueldo Basico: {10:.2f}
+----------------------------------------------------------------------
+                            Remuneraciones
+                            
+    Detalle                                 Total $(ARS)\n""".format(
+    datos[0], datos[1], int(datos[2]), fecha_actual[0], fecha_actual[1],
+    fecha_actual[2], int(datos[7]), int(datos[8]), int(datos[9]),
+    (dias_antiguedad/365), float(datos[6])
+)
+        archivo_nuevo.write(encabezado)
+        for clave in calculos_basicos[0]:
+            archivo_nuevo.write("{:<35} {:>20.2f}\n".format(
+                clave, calculos_basicos[0][clave]))
+            
+        archivo_nuevo.write("{}\n{:<35} {:>20.2f}\n".format(
+            ("-" * 70), "Sueldo Bruto", calculos_basicos[2]["Sueldo Bruto"]))
+        
+        archivo_nuevo.write("{}\n{:>47}\n".format(
+            ("-" * 70), "Aportes del trabajador"))
+        for clave in calculos_basicos[1]:
+            archivo_nuevo.write("{:<35} {:>20.2f}\n".format(
+                clave, calculos_basicos[1][clave]))
+            
+        archivo_nuevo.write("{}\n{:<35} {:>20.2f}\n".format(
+            ("-" * 70), "Sueldo Neto", calculos_basicos[2]["Sueldo Neto"]))
+        
+        archivo_nuevo.write("{}\n{:>42}\n".format(
+            ("-" * 70), "Indemnizaciones"))
+        for clave in indemnizaciones:
+            archivo_nuevo.write("{:<35} {:>20.2f}\n".format(
+                clave, indemnizaciones[clave]))
+            total += indemnizaciones[clave]
+            
+        archivo_nuevo.write("{}\n{:<35} {:>20.2f}\n".format(
+            ("-" * 70), "Importe final a cobrar", total))
+        
+        archivo_nuevo.write("\n\n\n{0:<43} {0}\n".format("_" * 35))
+        archivo_nuevo.write("Entregado por: Aerolineas Argentina\t\t\tRecibido por: {} {}".format(
+            datos[0], datos[1]))
+
+
+def registrarPago(
+    datos, calculos_basicos, indemnizaciones, fecha_actual, dias_antiguedad, motivo, ruta):  # void
     archivo = object  # objeto
     totalPago = 0.0  # float
-    dia = 0  # int
-    mes = 0  # int
-    ano = 0  # int
-    total = calculos[-1]
-    impuestos = calculos[5:8]
     archivo = validar["agregarArchivo"](ruta)
 
     if archivo == None:
         print("Object file -- does not exist")
         return
-    totalPago = total + impuestos[0] + impuestos[1] + impuestos[2]
+    totalPago = calculos_basicos[2]["Sueldo Neto"]
+    for clave in indemnizaciones:
+        totalPago += indemnizaciones[clave]
+    for clave in calculos_basicos[1]:
+        totalPago += calculos_basicos[1][clave]
+        
     if motivo == "Despido":
         archivo.write("Liq. Despido#".encode("utf-8"))
     else:
@@ -537,8 +394,6 @@ def registrarPago(datos, calculos, fecha_actual, dias_antiguedad, motivo, ruta):
     for i in range(len(fecha_actual)):
         archivo.write("{}-".format(fecha_actual[i]).encode("utf-8"))
     archivo.write("{}-".format(dias_antiguedad / 365).encode("utf-8"))
-    for i in range(len(calculos)):
-        archivo.write("{}-".format(calculos[i]).encode("utf-8"))
     archivo.write("#{:.2f}#No Pagado\n".format(totalPago).encode("utf-8"))
     archivo.close()
 
