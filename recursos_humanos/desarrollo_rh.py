@@ -268,7 +268,7 @@ def calculosBasicos(dias_antiguedad, dias_no_trabajados, mes, sueldo_basico):  #
 
 def calculoIndemnizaciones(
     dias_antiguedad, dias_no_trabajados, mes, sueldo_basico, motivo
-    ): # Diccionario
+    ): # diccionario
     if (
         dias_antiguedad >= 0
         and dias_no_trabajados >= 0
@@ -310,7 +310,7 @@ def calculoIndemnizaciones(
 
 def generarArchivo(
     datos, fecha_actual, dias_antiguedad, calculos_basicos, indemnizaciones
-    ): # void procedimiento
+    ): # void 
     if (
         len(datos) > 0
         and len(fecha_actual) > 0
@@ -379,23 +379,31 @@ def registrarPago(
     if archivo == None:
         print("Object file -- does not exist")
         return
-    totalPago = calculos_basicos[2]["Sueldo Neto"]
-    for clave in indemnizaciones:
-        totalPago += indemnizaciones[clave]
-    for clave in calculos_basicos[1]:
-        totalPago += calculos_basicos[1][clave]
-        
-    if motivo == "Despido":
-        archivo.write("Liq. Despido#".encode("utf-8"))
-    else:
-        archivo.write("Liq. Renuncia#".encode("utf-8"))
-    for i in range(len(datos)):
-        archivo.write("{}-".format(datos[i].strip()).encode("utf-8"))
-    for i in range(len(fecha_actual)):
-        archivo.write("{}-".format(fecha_actual[i]).encode("utf-8"))
-    archivo.write("{}-".format(dias_antiguedad / 365).encode("utf-8"))
-    archivo.write("#{:.2f}#No Pagado\n".format(totalPago).encode("utf-8"))
-    archivo.close()
+    if (
+        len(datos > 0)
+        and len(calculos_basicos) > 0
+        and len(indemnizaciones) > 0
+        and len(fecha_actual) > 0
+        and dias_antiguedad > 0
+        and (motivo == "Renuncia" or motivo == "Despido")
+        ):
+        totalPago = calculos_basicos[2]["Sueldo Neto"]
+        for clave in indemnizaciones:
+            totalPago += indemnizaciones[clave]
+        for clave in calculos_basicos[1]:
+            totalPago += calculos_basicos[1][clave]
+            
+        if motivo == "Despido":
+            archivo.write("Liq. Despido#".encode("utf-8"))
+        else:
+            archivo.write("Liq. Renuncia#".encode("utf-8"))
+        for i in range(len(datos)):
+            archivo.write("{}-".format(datos[i].strip()).encode("utf-8"))
+        for i in range(len(fecha_actual)):
+            archivo.write("{}-".format(fecha_actual[i]).encode("utf-8"))
+        archivo.write("{}-".format(dias_antiguedad / 365).encode("utf-8"))
+        archivo.write("#{:.2f}#No Pagado\n".format(totalPago).encode("utf-8"))
+        archivo.close()
 
 
 def vacaciones(años_antiguedad):  # int

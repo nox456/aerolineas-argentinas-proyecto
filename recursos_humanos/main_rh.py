@@ -1,3 +1,10 @@
+# Abisaac Carmona       CI: 32.218.469
+# Carlos Vargas         CI: 31.447.662
+# Gianna Badali         CI: 32.243.400
+# Giusepe Puccia        CI: 32.443.406
+# Victoria Santorsola   CI: 31.832.942
+
+
 from .utilitarias_rh import validar
 from .desarrollo_rh import solucion
 from inventario.desarrollo_inv import solucion as solucion_inv
